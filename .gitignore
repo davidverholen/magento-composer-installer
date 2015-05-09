@@ -1,0 +1,5 @@
+vendor
+build/logs
+composer.lock
+composer.phar
+

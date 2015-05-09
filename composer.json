@@ -1,0 +1,46 @@
+{
+  "name": "davidverholen/magento-composer-installer",
+  "description": "Composer installer for Magento modules",
+  "keywords": [
+    "composer",
+    "installer",
+    "magento"
+  ],
+  "type": "composer-plugin",
+  "license": "OSL-3.0",
+  "homepage": "https://github.com/davidverholen/bragento-composer-installer",
+  "authors": [
+    {
+      "name": "David Verholen",
+      "email": "david@verholen.com",
+      "homepage": "https://github.com/davidverholen"
+    }
+  ],
+  "require": {
+    "composer-plugin-api": "*",
+    "symfony/filesystem": "~2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "*",
+    "composer/composer": "*@alpha",
+    "codeclimate/php-test-reporter": "*",
+    "mikey179/vfsStream": "*"
+  },
+  "replace": {
+    "magento-hackathon/magento-composer-installer": "*",
+    "bragento/magento-composer-installer": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "DavidVerholen\\Magento\\Composer\\Installer\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "DavidVerholen\\Test\\Magento\\Composer\\Installer\\": "tests"
+    }
+  },
+  "extra": {
+    "class": "DavidVerholen\\Magento\\Composer\\Installer\\Plugin"
+  }
+}
