@@ -23,7 +23,6 @@
   "require-dev": {
     "phpunit/phpunit": "*",
     "composer/composer": "*@alpha",
-    "codeclimate/php-test-reporter": "*",
     "mikey179/vfsStream": "*"
   },
   "replace": {
