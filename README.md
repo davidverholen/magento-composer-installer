@@ -1,16 +1,5 @@
 # Magento Composer Installer
 
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/bragento/bragento-composer-installer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-[![Build Status](https://travis-ci.org/bragento/bragento-composer-installer.svg?branch=develop)](https://travis-ci.org/bragento/bragento-composer-installer)
-[![Code Climate](https://codeclimate.com/github/bragento/bragento-composer-installer.png)](https://codeclimate.com/github/bragento/bragento-composer-installer)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bragento/bragento-composer-installer/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/bragento/bragento-composer-installer/?branch=develop)
-
-[![License](https://poser.pugx.org/bragento/magento-composer-installer/license.svg)](https://packagist.org/packages/bragento/magento-composer-installer)
-[![License](https://www.bountysource.com/badge/tracker?tracker_id=4289269)](https://www.bountysource.com/trackers/4289269-bragento-bragento-composer-installer)
-
-
-
 ## Supported Types:
 
 magento-module  
@@ -29,7 +18,7 @@ Magento will be copied to the Magento root dir (Default: 'magento')
 ```json
 {
     "require": {  
-        "bragento/magento-composer-installer": "~1",  
+        "davidverholen/magento-composer-installer": "~1",  
         "magento/core": "~1.9"  
     },  
     "extra": {  
@@ -88,7 +77,7 @@ There is also an example of how to add a composer package directly from a github
         }
     ],
     "require": {  
-        "bragento/magento-composer-installer": "~1",  
+        "davidverholen/magento-composer-installer": "~1",  
         "magento/core": "~1.9",
         "firegento/magesetup": "~2",
         "danslo/api-import": "~1"
@@ -129,7 +118,7 @@ You can also overwrite the Deploy Strategy for specific Modules under the config
         }
     ],
     "require": {  
-        "bragento/magento-composer-installer": "~1",  
+        "davidverholen/magento-composer-installer": "~1",  
         "magento/core": "~1.9",
         "firegento/magesetup": "~2"
     },  
@@ -154,7 +143,3 @@ You can define that deployed files will be automatically added to .gitignore in 
 }
 ```
 
-## Contributing
-
-make pull requests solely from the develop Branch.  
-run the tests before making a pull request

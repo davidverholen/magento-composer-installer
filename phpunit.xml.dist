@@ -11,7 +11,7 @@
          bootstrap="tests/bootstrap.php"
         >
     <testsuites>
-        <testsuite name="Bragento Magento Installer Test Suite">
+        <testsuite name="DavidVerholen Magento Installer Test Suite">
             <directory>./tests</directory>
         </testsuite>
     </testsuites>

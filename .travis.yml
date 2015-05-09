@@ -16,14 +16,9 @@ before_script:
 - composer install --no-interaction --dev --prefer-dist
 script:
 - "./vendor/bin/phpunit"
-after_script:
-- "./vendor/bin/test-reporter"
 notifications:
   email:
     recipients:
-    - david.verholen@brandung.de
+    - david@verholen.com
     on_success: never
     on_failure: always
-env:
-  global:
-    secure: UtclMBeoFWNhUn1GgiA1lSpMa/FyRZNpwaPeuGfZE4BoY270fJkoWIBxI9Dm2WoWLY+c4Hd64GmTorxfvp4E8h4C/noH6q3N+u+FlhasPjBoh0ZNLxTyJJb+BHP1AajS7dFwy3oZiAqnZPh7ahTt95RFzTgAKHwuizaQzu2MDqs=
