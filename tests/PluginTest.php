@@ -44,7 +44,7 @@ class PluginTest extends AbstractTest
     public function testGetServiceContainer()
     {
         $this->assertInstanceOf(
-            Container::class,
+            'Symfony\Component\DependencyInjection\Container',
             $this->subject->getServiceContainer()
         );
     }
