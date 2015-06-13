@@ -33,6 +33,11 @@ class ModmanMapping extends AbstractMapping
     protected $modmanFileName;
 
     /**
+     * @var array
+     */
+    protected $ignoreLinesCharacters;
+
+    /**
      * @var SplFileInfo
      */
     protected $modmanFile;
@@ -51,6 +56,22 @@ class ModmanMapping extends AbstractMapping
     public function setModmanFileName($modmanFileName)
     {
         $this->modmanFileName = $modmanFileName;
+    }
+
+    /**
+     * @return array
+     */
+    public function getIgnoreLinesCharacters()
+    {
+        return $this->ignoreLinesCharacters;
+    }
+
+    /**
+     * @param array $ignoreLinesCharacters
+     */
+    public function setIgnoreLinesCharacters($ignoreLinesCharacters)
+    {
+        $this->ignoreLinesCharacters = $ignoreLinesCharacters;
     }
 
     /**
@@ -76,9 +97,15 @@ class ModmanMapping extends AbstractMapping
      */
     public function getMappings()
     {
-        $this->getModmanFile()->getContents();
-        /** @todo get mappings from modman file */
-        return [];
+        $map = [];
+        foreach ($this->getModmanFileLines() as $line) {
+            if (!in_array(substr($line, 0, 1), $this->getIgnoreLinesCharacters())) {
+                $lineParts = explode(' ', trim($line));
+                $map[trim($lineParts[0])] = trim($lineParts[1]);
+            }
+        }
+
+        return $map;
     }
 
     /**

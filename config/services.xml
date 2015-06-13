@@ -10,6 +10,10 @@
             <parameter>magento-core</parameter>
         </parameter>
         <parameter key="modman.file.name">modman</parameter>
+        <parameter key="modman.ignoreLineCharacters" type="collection">
+            <parameter>@</parameter>
+            <parameter>#</parameter>
+        </parameter>
     </parameters>
 
     <services>
@@ -50,6 +54,9 @@
                  parent="abstractMapping">
             <call method="setModmanFileName">
                 <argument>%modman.file.name%</argument>
+            </call>
+            <call method="setIgnoreLinesCharacters">
+                <argument>%modman.ignoreLineCharacters%</argument>
             </call>
         </service>
 
