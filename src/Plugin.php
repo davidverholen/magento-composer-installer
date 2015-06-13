@@ -14,15 +14,17 @@
 
 namespace DavidVerholen\Magento\Composer\Installer;
 
-use DavidVerholen\Magento\Composer\Installer\Deploy\Manager;
-use DavidVerholen\Magento\Composer\Installer\Deploy\Validate;
-use DavidVerholen\Magento\Composer\Installer\Project\Config;
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\IO\IOInterface;
-use Composer\Script\CommandEvent;
 use Composer\Plugin\PluginInterface;
+use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
+use DavidVerholen\Magento\Composer\Installer\Deploy\DeployService;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 /**
  * Class Plugin
@@ -36,6 +38,29 @@ use Composer\Script\ScriptEvents;
  */
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
+    const APP_NAMESPACE = 'davidverholen';
+
+    const APP_NAME = 'magento-composer-installer';
+
+    const APP_CONFIG_DIR = 'config';
+
+    const APP_SERVICE_MAIN_CONFIG = 'services.xml';
+
+    /**
+     * @var string
+     */
+    protected $serviceConfigDir;
+
+    /**
+     * @var DeployService
+     */
+    protected $deployService;
+
+    /**
+     * @var Container
+     */
+    protected $container;
+
     /**
      * Returns an array of event names this subscriber wants to listen to.
      *
@@ -60,8 +85,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            ScriptEvents::POST_INSTALL_CMD => 'onPostInstallCmd',
-            ScriptEvents::POST_UPDATE_CMD  => 'onPostUpdateCmd'
+            ScriptEvents::POST_INSTALL_CMD => 'deployPackages',
+            ScriptEvents::POST_UPDATE_CMD  => 'deployPackages'
         );
     }
 
@@ -75,53 +100,116 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      */
     public function activate(Composer $composer, IOInterface $io)
     {
-        Deploy\Strategy\Factory::init($composer, $io);
-        Deploy\Manager::init($composer, $io);
-        Config::init($composer);
-
-        $this->initEventSubscribers($composer, $io);
+        $this->initServiceContainer($composer, $io);
     }
 
     /**
-     * initEventSubscribers
+     * initServiceContainer
      *
      * @param Composer    $composer
      * @param IOInterface $io
      *
      * @return void
      */
-    protected function initEventSubscribers(Composer $composer, IOInterface $io)
+    private function initServiceContainer(Composer $composer, IOInterface $io)
     {
-        $ed = $composer->getEventDispatcher();
-        $ed->addSubscriber(Deploy\Manager::getInstance());
-        $ed->addSubscriber(new Deploy\OutputSubscriber($io));
-        $ed->addSubscriber(new Updater\Core());
-        $ed->addSubscriber(new Validate($io));
+        $this->container = new ContainerBuilder();
+        $loader = new XmlFileLoader(
+            $this->container,
+            new FileLocator($this->getServiceConfigDir($composer, $io))
+        );
+        $loader->load(self::APP_SERVICE_MAIN_CONFIG);
+        $this->container->compile();
+    }
+
+    /**
+     * getServiceContainer
+     *
+     * @return Container
+     */
+    public function getServiceContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * getApplicationDir
+     *
+     * @param Composer    $composer
+     * @param IOInterface $io
+     *
+     * @return string
+     */
+    protected function getApplicationDir(Composer $composer, IOInterface $io)
+    {
+        return implode(
+            DIRECTORY_SEPARATOR,
+            [
+                realpath($composer->getConfig()->get('vendor-dir')),
+                self::APP_NAMESPACE,
+                self::APP_NAME
+            ]
+        );
+    }
+
+    /**
+     * setServiceConfigDir
+     *
+     * @param string $serviceConfigDir
+     *
+     * @return void
+     */
+    public function setServiceConfigDir($serviceConfigDir)
+    {
+        $this->serviceConfigDir = $serviceConfigDir;
+    }
+
+    /**
+     * getServiceConfigFilePath
+     *
+     * @param Composer    $composer
+     * @param IOInterface $io
+     *
+     * @return string
+     */
+    protected function getServiceConfigDir(Composer $composer, IOInterface $io)
+    {
+        if (null === $this->serviceConfigDir) {
+            $this->serviceConfigDir = implode(
+                DIRECTORY_SEPARATOR,
+                [
+                    $this->getApplicationDir($composer, $io),
+                    self::APP_CONFIG_DIR
+                ]
+            );
+        }
+
+        return $this->serviceConfigDir;
+    }
+
+    /**
+     * getDeployService
+     *
+     * @return DeployService|object
+     */
+    protected function getDeployService()
+    {
+        if (null === $this->deployService) {
+            $this->deployService = $this->getServiceContainer()
+                ->get('deployService');
+        }
+
+        return $this->deployService;
     }
 
     /**
      * onPostInstallCmd
      *
-     * @param CommandEvent $event
+     * @param Event $event
      *
-     * @return void
      */
-    public function onPostInstallCmd(CommandEvent $event)
+    public function deployPackages(Event $event)
     {
-        $event->getIO()->write('<info>post install:</info>');
-        Deploy\Manager::getInstance()->doDeploy();
-    }
-
-    /**
-     * onPostUpdateCmd
-     *
-     * @param CommandEvent $event
-     *
-     * @return void
-     */
-    public function onPostUpdateCmd(CommandEvent $event)
-    {
-        $event->getIO()->write('<info>post update:</info>');
-        Deploy\Manager::getInstance()->doDeploy();
+        $this->getDeployService()->deploy();
     }
 }

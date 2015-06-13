@@ -1,150 +1,143 @@
 <?php
 /**
- * AbstractTest.php
+ * Base.php
  *
  * PHP Version 5
  *
- * @category  DavidVerholen_MagentoComposerInstaller
- * @package   ${NAMESPACE}
- * @author    David Verholen <david@verholen.com>
- * @copyright 2015 David Verholen
- * @license   http://opensource.org/licenses/OSL-3.0 OSL-3.0
- * @link      http://www.brandung.de
+ * @category Bragento_MagentoComposerInstaller
+ * @package  Bragento_MagentoComposerInstaller
+ * @author   David Verholen <david@verholen.com>
+ * @license  http://opensource.org/licenses/OSL-3.0 OSL-3.0
+ * @link     http://github.com/davidverholen
  */
 
-namespace Bragento\Test\Magento\Composer\Installer;
+namespace DavidVerholen\Magento\Composer\Installer;
 
-use DavidVerholen\Magento\Composer\Installer\Util\Filesystem;
+use Composer\Composer;
+use Composer\Config;
+use Composer\Factory;
+use Composer\IO\ConsoleIO;
+use Composer\IO\IOInterface;
+use Composer\Package\Package;
 use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamDirectory;
+use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 /**
- * Class AbstractTest
+ * Class Base
  *
- * @category  DavidVerholen_MagentoComposerInstaller
- * @package   ${NAMESPACE}
- * @author    David Verholen <david@verholen.com>
- * @copyright 2015 David Verholen
- * @license   http://opensource.org/licenses/OSL-3.0 OSL-3.0
- * @link      http://www.brandung.de
+ * @category DavidVerholen_MagentoComposerInstaller
+ * @package  ${NAMESPACE}
+ * @author   David Verholen <david@verholen.com>
+ * @license  http://opensource.org/licenses/OSL-3.0 OSL-3.0
+ * @link     http://github.com/davidverholen
  */
 abstract class AbstractTest extends \PHPUnit_Framework_TestCase
 {
-    const VFS_ROOT = 'root';
-
-    const TEST_ROOT_DIR = 'root';
-
-    const BUILD_ROOT = 'build';
-
-    const TEST_FILES_DIR = 'files';
+    /**
+     * @var Composer
+     */
+    private $composer;
 
     /**
-     * _fs
-     *
-     * @var Filesystem
+     * @var IOInterface
      */
-    private $filesystem;
+    private $io;
+
+    /**
+     * @var vfsStreamDirectory
+     */
+    private $root;
 
     protected function setUp()
     {
+        $this->root = vfsStream::setup('root');
+
         parent::setUp();
-        $this->getFilesystem()->emptyDirectory($this->getBuildDir());
-        vfsStream::setup(self::VFS_ROOT);
-    }
-
-    protected function toBuildDir()
-    {
-        chdir($this->getBuildDir());
     }
 
     /**
-     * getBuildDir
+     * getRoot
      *
-     * @return \Symfony\Component\Finder\SplFileInfo
+     * @return vfsStreamDirectory
      */
-    protected function getBuildDir()
+    protected function getRoot()
     {
-        return $this->getFilesystem()
-            ->getDir(TEST_BUILD_DIR);
-
+        return $this->root;
     }
 
     /**
-     * getFs
+     * getComposer
      *
-     * @return Filesystem
+     * @return Composer
      */
-    protected function getFilesystem()
+    protected function getComposer()
     {
-        if (null === $this->filesystem) {
-            $this->filesystem = new Filesystem();
+        if (null === $this->composer) {
+            $this->composer = new Composer();
         }
 
-        return $this->filesystem;
+        return $this->composer;
     }
 
     /**
-     * getVfsDir
+     * getIo
      *
-     * @param $url
+     * @return ConsoleIO|IOInterface
+     */
+    protected function getIo()
+    {
+        if (null === $this->io) {
+            $this->io = new ConsoleIO(
+                new ArgvInput(),
+                new ConsoleOutput(ConsoleOutput::VERBOSITY_DEBUG),
+                new HelperSet()
+            );
+        }
+
+        return $this->io;
+    }
+
+    /**
+     * getTestConfig
+     *
+     * @return Config
+     */
+    protected function getTestConfig()
+    {
+        $config = new Config();
+
+        return $config;
+    }
+
+    /**
+     * getTestServiceConfigDir
      *
      * @return string
      */
-    protected function getTestResDir($url)
+    protected function getTestServiceConfigDir()
     {
-        return TEST_RES_BASE_DIR .
-        DIRECTORY_SEPARATOR .
-        $url;
+        return implode(
+            DIRECTORY_SEPARATOR,
+            [
+                APPLICATION_BASE_DIR,
+                Plugin::APP_CONFIG_DIR
+            ]
+        );
     }
 
     /**
-     * createTestFiles
+     * getDummyPackage
      *
-     * @param array $files
-     *
-     * @return void
+     * @return Package
      */
-    protected function createTestFiles(array $files)
+    protected function getDummyPackage()
     {
-        foreach ($files as $file) {
-            $this->createTestFile($file);
-        }
+        $package = new Package('test', '1.0.0', '1.0.0');
+        $package->setTargetDir(vfsStream::url('root'));
+
+        return $package;
     }
-
-    /**
-     * @param $path
-     */
-    protected function createTestFile($path)
-    {
-        if (count($this->getFilesystem()->getPathParts($path)) > 1) {
-            $this->getFilesystem()->mkdir(dirname($path), 0755, true);
-        }
-
-        touch($path);
-    }
-
-    /**
-     * getAbsPath
-     *
-     * @param $path
-     *
-     * @return string
-     */
-    protected function getAbsPath($path)
-    {
-        return realpath($path);
-    }
-
-    protected function tearDown()
-    {
-        chdir($this->getOriginalCwd());
-        $this->getFilesystem()->emptyDirectory($this->getBuildDir());
-        parent::tearDown();
-    }
-
-    protected function getOriginalCwd()
-    {
-        return dirname(realpath(__FILE__));
-    }
-
-
 }

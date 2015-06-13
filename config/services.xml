@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="logger.name">magento-composer-installer</parameter>
+        <parameter key="composer.package.types" type="collection">
+            <parameter>magento-module</parameter>
+            <parameter>magento-core</parameter>
+        </parameter>
+        <parameter key="modman.file.name">modman</parameter>
+    </parameters>
+
+    <services>
+        <service id="logger" class="Monolog\Logger">
+            <argument>%logger.name%</argument>
+        </service>
+
+        <service id="filesystem" class="Symfony\Component\Filesystem\Filesystem"/>
+        <service id="finder" class="Symfony\Component\Finder\Finder"/>
+
+        <service id="abstractService" abstract="true">
+            <call method="setLogger">
+                <argument type="service" id="logger"/>
+            </call>
+        </service>
+
+        <service id="resolverService"
+                 class="DavidVerholen\Magento\Composer\Installer\Mapping\ResolverService"
+                 parent="abstractService">
+            <argument type="service" id="filesystem"/>
+        </service>
+
+        <service id="abstractMapping" abstract="true">
+            <argument type="service" id="filesystem"/>
+            <argument type="service" id="finder"/>
+        </service>
+
+        <service id="defaultMapping"
+                 class="DavidVerholen\Magento\Composer\Installer\Mapping\DefaultMapping"
+                 parent="abstractMapping"/>
+
+        <service id="composerMapping"
+                 class="DavidVerholen\Magento\Composer\Installer\Mapping\ComposerMapping"
+                 parent="abstractMapping"/>
+
+        <service id="modmanMapping"
+                 class="DavidVerholen\Magento\Composer\Installer\Mapping\ModmanMapping"
+                 parent="abstractMapping">
+            <call method="setModmanFileName">
+                <argument>%modman.file.name%</argument>
+            </call>
+        </service>
+
+        <service id="mappingService"
+                 class="DavidVerholen\Magento\Composer\Installer\Mapping\MappingService"
+                 parent="abstractService">
+            <argument type="service" id="defaultMapping"/>
+            <argument type="service" id="resolverService"/>
+            <call method="addMapping">
+                <argument type="service" id="composerMapping"/>
+            </call>
+            <call method="addMapping">
+                <argument type="service" id="modmanMapping"/>
+            </call>
+        </service>
+
+        <service id="deployService"
+                 class="DavidVerholen\Magento\Composer\Installer\Deploy\DeployService"
+                 parent="abstractService">
+            <argument>%composer.package.types%</argument>
+            <argument type="service" id="mappingService"/>
+        </service>
+    </services>
+</container>

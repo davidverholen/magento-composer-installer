@@ -17,13 +17,18 @@
     }
   ],
   "require": {
-    "composer-plugin-api": "*",
-    "symfony/filesystem": "~2"
+    "composer-plugin-api": "^1.0",
+    "symfony/filesystem": "^2.6",
+    "symfony/finder": "^2.6",
+    "symfony/console": "^2.6",
+    "symfony/dependency-injection": "^2.6",
+    "symfony/config": "^2.6",
+    "monolog/monolog": "^1.9"
   },
   "require-dev": {
-    "phpunit/phpunit": "*",
+    "phpunit/phpunit": "^4.6",
     "composer/composer": "*@alpha",
-    "mikey179/vfsStream": "*"
+    "mikey179/vfsStream": "^1.5"
   },
   "replace": {
     "magento-hackathon/magento-composer-installer": "*",
@@ -36,7 +41,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "DavidVerholen\\Test\\Magento\\Composer\\Installer\\": "tests"
+      "DavidVerholen\\Magento\\Composer\\Installer\\": "tests"
     }
   },
   "extra": {

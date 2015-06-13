@@ -4,192 +4,97 @@
  *
  * PHP Version 5
  *
- * @category  DavidVerholen_MagentoComposerInstaller
- * @package   DavidVerholen\Magento\Composer\Installer\Mapping
- * @author    David Verholen <david@verholen.com>
- * @copyright 2015 David Verholen
- * @license   http://opensource.org/licenses/OSL-3.0 OSL-3.0
- * @link      http://www.brandung.de
+ * @category DavidVerholen_MagentoComposerInstaller
+ * @package  DavidVerholen_MagentoComposerInstaller
+ * @author   David Verholen <david@verholen.com>
+ * @license  http://opensource.org/licenses/OSL-3.0 OSL-3.0
+ * @link     http://github.com/davidverholen
  */
 
 namespace DavidVerholen\Magento\Composer\Installer\Mapping;
 
-use DavidVerholen\Magento\Composer\Installer\Util\Filesystem;
-use DavidVerholen\Magento\Composer\Installer\Util\String;
-use Composer\Package\PackageInterface;
-use Symfony\Component\Finder\SplFileInfo;
+use Composer\Package\Package;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Class AbstractMapping
  *
- * @category  DavidVerholen_MagentoComposerInstaller
- * @package   DavidVerholen\Magento\Composer\Installer\Mapping
- * @author    David Verholen <david@verholen.com>
- * @copyright 2015 David Verholen
- * @license   http://opensource.org/licenses/OSL-3.0 OSL-3.0
- * @link      http://www.brandung.de
+ * @category DavidVerholen_MagentoComposerInstaller
+ * @package  Mapping
+ * @author   David Verholen <david@verholen.com>
+ * @license  http://opensource.org/licenses/OSL-3.0 OSL-3.0
+ * @link     http://github.com/davidverholen
  */
-abstract class AbstractMapping
+abstract class AbstractMapping implements MappingInterface
 {
     /**
-     * _mappings
-     *
-     * @var array
-     */
-    protected $mappingsArray;
-
-    /**
-     * _moduleDir
-     *
-     * @var SplFileInfo
-     */
-    private $moduleDir;
-
-    /**
-     * _fs
-     *
-     * @var Filesystem
-     */
-    private $fs;
-
-    /**
-     * _package
-     *
-     * @var PackageInterface
+     * @var Package
      */
     private $package;
 
     /**
-     * construct mappings
-     *
-     * @param SplFileInfo      $moduleDir
-     * @param PackageInterface $package
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
+     * @var Finder
+     */
+    private $finder;
+
+    /**
+     * @param Filesystem $filesystem
+     * @param Finder     $finder
      */
     public function __construct(
-        SplFileInfo $moduleDir,
-        PackageInterface $package
+        Filesystem $filesystem,
+        Finder $finder
     ) {
-        $this->fs = new Filesystem();
-        $this->moduleDir = $moduleDir;
+        $this->filesystem = $filesystem;
+        $this->finder = $finder;
+    }
+
+    /**
+     * setPackage
+     *
+     * @param Package $package
+     *
+     * @return $this
+     */
+    public function setPackage(Package $package)
+    {
         $this->package = $package;
-    }
-
-    /**
-     * getTranslatedMappingsArray
-     *
-     * parse mappings like wildcards
-     *
-     * @return array
-     */
-    public function getResolvedMappingsArray()
-    {
-        return $this->resolveMappings($this->getMappingsArray());
-    }
-
-    /**
-     * translateMappings
-     *
-     * @param array $mappings
-     *
-     * @return array
-     */
-    public function resolveMappings(array $mappings)
-    {
-        $translatedMap = array();
-        foreach ($mappings as $src => $dest) {
-            if (String::contains($src, '*')) {
-                foreach (glob($this->getFs()->joinFileUris($this->getModuleDir(), $src)) as $file) {
-                    $fileSrc = $this->getFs()->rmAbsPathPart(
-                        $file,
-                        $this->getModuleDir()
-                    );
-                    $translatedMap[$this->getFs()->trimDs($fileSrc)]
-                        = $this->getFs()->trimDs(
-                            $this->getFs()->joinFileUris(
-                                $dest,
-                                basename($file),
-                                false
-                            )
-                        );
-                }
-            } else {
-                if ($this->getFs()->endsWithDs($dest)) {
-                    if ($this->getFs()->endsWithDs($src)) {
-                        $src = $this->getFs()->removeTrailingDs($src);
-                    } else {
-                        if (is_file($src)) {
-                            $dest = $this->getFs()->joinFileUris(
-                                $dest,
-                                basename($src),
-                                false
-                            );
-                        } else {
-                            $dest = $this->getFs()->removeTrailingDs($dest);
-                        }
-                    }
-                }
-                $translatedMap[$this->getFs()->trimDs($src)] = $this->getFs()->trimDs($dest);
-            }
-        }
-
-        return $translatedMap;
-    }
-
-    /**
-     * getModuleDir
-     *
-     * @return SplFileInfo
-     */
-    protected function getModuleDir()
-    {
-        return $this->moduleDir;
-    }
-
-    /**
-     * getMappingsArray
-     *
-     * @return array
-     */
-    public function getMappingsArray()
-    {
-        if (null === $this->mappingsArray) {
-            $this->mappingsArray = $this->parseMappings();
-        }
-
-        return $this->mappingsArray;
-    }
-
-    /**
-     * _pathMappingTranslations
-     *
-     * get the mappings from the source and return them
-     *
-     * * $example = array(
-     * *    $source1 => $target1,
-     * *    $source2 => target2
-     * * )
-     *
-     * @return array
-     */
-    abstract protected function parseMappings();
-
-    /**
-     * getFs
-     *
-     * @return Filesystem
-     */
-    protected function getFs()
-    {
-        return $this->fs;
+        return $this;
     }
 
     /**
      * getPackage
      *
-     * @return PackageInterface
+     * @return Package
      */
     protected function getPackage()
     {
         return $this->package;
+    }
+
+    /**
+     * getFilesystem
+     *
+     * @return Filesystem
+     */
+    protected function getFilesystem()
+    {
+        return $this->filesystem;
+    }
+
+    /**
+     * getFinder
+     *
+     * @return Finder
+     */
+    protected function getFinder()
+    {
+        return $this->finder;
     }
 }
