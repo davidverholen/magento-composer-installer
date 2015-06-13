@@ -52,7 +52,7 @@ class PluginTest extends AbstractTest
     public function testGetDeployService()
     {
         $this->assertInstanceOf(
-            DeployService::class,
+            'DavidVerholen\Magento\Composer\Installer\Deploy\DeployService',
             $this->subject->getServiceContainer()->get('deployService')
         );
     }
