@@ -4,7 +4,6 @@
 
 magento-module  
 magento-core  
-magento-theme (currently just the same as magento-module)  
 
 
 
@@ -23,33 +22,6 @@ Magento will be copied to the Magento root dir (Default: 'magento')
     },  
     "extra": {  
         "magento-root-dir": "magento"  
-    }  
-}
-```
-
-### Persistent Files
-
-There are several persistent files and directories, that will be backed up and restored after core deployment:  
-
-var  
-media  
-app/etc/local.xml  
-
-You can also define additional Files to be persistent such as local Modules  
-
-```json
-{
-    "require": {  
-        "bragento/magento-composer-installer": "~1",  
-        "magento/core": "~1.9"  
-    },  
-    "extra": {  
-        "magento-root-dir": "magento",
-        "persistent-files": [
-            "somefile",
-            "app/code/local/Vendor/SomeModule",
-            "app/etc/modules/Vendor_SomeModule.xml"
-        ]
     }  
 }
 ```
@@ -87,59 +59,3 @@ There is also an example of how to add a composer package directly from a github
     }  
 }
 ```
-
-### Change Deploy Strategy
-
-By default, all Modules are deployed by symlink. You can change this behaviour with the config key 'magento-deploystrategy'  
-
-Possible values are:  
-symlink  
-copy  
-none  (will just install the Module but not deploy it to magento root)
-
-```json
-{ 
-    "extra": {  
-        "magento-deploystrategy": "copy"  
-    }  
-}
-```
-
-### Overwrite Deploy Strategy per Module
-
-You can also overwrite the Deploy Strategy for specific Modules under the config key magento-deploystrategy-overwrite  
-
-```json
-{ 
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "packages.firegento.com"
-        }
-    ],
-    "require": {  
-        "davidverholen/magento-composer-installer": "~1",  
-        "magento/core": "~1.9",
-        "firegento/magesetup": "~2"
-    },  
-    "extra": {  
-        "magento-deploystrategy": "symlink",
-        "magento-deploystrategy-overwrite": {
-            "firegento/magesetup": "copy"
-        }
-    }  
-}
-```
-
-### Auto Append Gitignore
-
-You can define that deployed files will be automatically added to .gitignore in magento root
-
-```json
-{
-    "extra": {  
-        "auto-append-gitignore": true
-    }  
-}
-```
-
