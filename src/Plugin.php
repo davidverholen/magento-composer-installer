@@ -14,6 +14,7 @@
 
 namespace DavidVerholen\Magento\Composer\Installer;
 
+use DavidVerholen\Magento\Composer\Installer\App\SerializerFactory;
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\IO\IOInterface;
@@ -21,6 +22,7 @@ use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 use DavidVerholen\Magento\Composer\Installer\Deploy\DeployService;
+use JMS\Serializer\Serializer;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -39,11 +41,11 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
     const APP_NAMESPACE = 'davidverholen';
-
     const APP_NAME = 'magento-composer-installer';
 
+    const APP_RES_DIR = 'res';
     const APP_CONFIG_DIR = 'config';
-
+    const APP_SERIALIZER_CONFIG_DIR = 'serializer';
     const APP_SERVICE_MAIN_CONFIG = 'services.xml';
 
     /**
@@ -55,6 +57,11 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      * @var DeployService
      */
     protected $deployService;
+
+    /**
+     * @var Serializer
+     */
+    protected $serializer;
 
     /**
      * @var Container
@@ -101,6 +108,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     public function activate(Composer $composer, IOInterface $io)
     {
         $this->initServiceContainer($composer, $io);
+        $this->initSerializer($composer, $io);
     }
 
     /**
@@ -120,6 +128,27 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         );
         $loader->load(self::APP_SERVICE_MAIN_CONFIG);
         $this->container->compile();
+    }
+
+    /**
+     * initSerializer
+     *
+     * @param Composer    $composer
+     * @param IOInterface $io
+     *
+     * @return void
+     */
+    private function initSerializer(Composer $composer, IOInterface $io)
+    {
+        SerializerFactory::setMetadataDir(
+            implode(
+                DIRECTORY_SEPARATOR,
+                [
+                    $this->getServiceConfigDir($composer, $io),
+                    self::APP_SERIALIZER_CONFIG_DIR
+                ]
+            )
+        );
     }
 
     /**
@@ -179,6 +208,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
                 DIRECTORY_SEPARATOR,
                 [
                     $this->getApplicationDir($composer, $io),
+                    self::APP_RES_DIR,
                     self::APP_CONFIG_DIR
                 ]
             );

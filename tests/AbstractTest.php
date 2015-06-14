@@ -123,6 +123,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
             DIRECTORY_SEPARATOR,
             [
                 APPLICATION_BASE_DIR,
+                Plugin::APP_RES_DIR,
                 Plugin::APP_CONFIG_DIR
             ]
         );

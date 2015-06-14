@@ -23,6 +23,7 @@
     "symfony/finder": "^2.7",
     "symfony/dependency-injection": "^2.7",
     "symfony/config": "^2.7",
+    "jms/serializer": "^0.16",
     "monolog/monolog": "^1.13"
   },
   "require-dev": {

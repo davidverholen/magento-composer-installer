@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<serializer>
+    <class name="DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package"
+           exclusion-policy="ALL"
+           xml-root-name="package"
+           accessor-order="alphabetical">
+        <property name="name"
+                  expose="true"
+                  type="string"
+                  serialized-name="name"/>
+        <property name="version"
+                  expose="true"
+                  type="string"
+                  serialized-name="version"/>
+        <property name="stability"
+                  expose="true"
+                  type="string"
+                  serialized-name="stability"/>
+        <property name="license"
+                  expose="true"
+                  type="string"
+                  serialized-name="license"/>
+        <property name="channel"
+                  expose="true"
+                  type="string"
+                  serialized-name="channel"/>
+        <property name="extends"
+                  expose="true"
+                  type="string"
+                  serialized-name="extends"/>
+        <property name="summary"
+                  expose="true"
+                  type="string"
+                  serialized-name="summary"/>
+        <property name="description"
+                  expose="true"
+                  type="string"
+                  serialized-name="description"/>
+    </class>
+</serializer>
