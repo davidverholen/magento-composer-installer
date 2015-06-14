@@ -1,6 +1,7 @@
 # Magento Composer Installer
 
 [![Build Status](https://travis-ci.org/davidverholen/magento-composer-installer.svg?branch=1.0)](https://travis-ci.org/davidverholen/magento-composer-installer)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/davidverholen/magento-composer-installer/badges/quality-score.png?b=1.0)](https://scrutinizer-ci.com/g/davidverholen/magento-composer-installer/?branch=1.0)
 
 ## Supported Types:
 
