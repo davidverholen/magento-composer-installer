@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<serializer>
+    <class name="DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package\Author"
+           exclusion-policy="ALL"
+           xml-root-name="author"
+           accessor-order="alphabetical">
+        <property name="name"
+                  expose="true"
+                  type="string"
+                  serialized-name="name"/>
+        <property name="user"
+                  expose="true"
+                  type="string"
+                  serialized-name="user"/>
+        <property name="email"
+                  expose="true"
+                  type="string"
+                  serialized-name="email"/>
+    </class>
+</serializer>

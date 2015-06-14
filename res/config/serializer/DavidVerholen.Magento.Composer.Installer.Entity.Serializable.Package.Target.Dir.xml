@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<serializer>
+    <class name="DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package\Target\Dir"
+           exclusion-policy="ALL"
+           xml-root-name="dir"
+           accessor-order="alphabetical">
+        <property name="name"
+                  expose="true"
+                  type="string"
+                  xml-attribute="true"
+                  serialized-name="name"/>
+        <property name="dirs"
+                  expose="true"
+                  type="array&lt;DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package\Target\Dir&gt;"
+                  serialized-name="dirs">
+            <xml-list inline="true" entry-name="dir"/>
+        </property>
+        <property name="files"
+                  expose="true"
+                  type="array&lt;DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package\Target\File&gt;"
+                  serialized-name="files">
+            <xml-list inline="true" entry-name="file"/>
+        </property>
+    </class>
+</serializer>

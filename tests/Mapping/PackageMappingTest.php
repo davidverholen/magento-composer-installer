@@ -13,8 +13,8 @@
 
 namespace DavidVerholen\Magento\Composer\Installer\Mapping;
 
-use DavidVerholen\Magento\Composer\Installer\App\SerializerFactory;
 use DavidVerholen\Magento\Composer\Installer\AbstractTest;
+use DavidVerholen\Magento\Composer\Installer\App\SerializerFactory;
 use DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package;
 use DavidVerholen\Magento\Composer\Installer\Plugin;
 use Symfony\Component\Filesystem\Filesystem;
@@ -66,6 +66,11 @@ class PackageMappingTest extends AbstractTest
 
     public function testSerialize()
     {
+        $author = new Package\Author();
+        $author->setName('test author');
+        $author->setUser('testauthor');
+        $author->setEmail('test@author.de');
+
         $packageEntity = new Package();
         $packageEntity->setName('testName');
         $packageEntity->setChannel('community');
@@ -73,8 +78,12 @@ class PackageMappingTest extends AbstractTest
         $packageEntity->setLicense('OSL-3.0');
         $packageEntity->setStability('stable');
         $packageEntity->setSummary('Summary');
+        $packageEntity->setNotes('notes');
+        $packageEntity->setAuthors([$author]);
+        $packageEntity->setContents([]);
 
-        $xml = $this->subject->getSerializer()->serialize($packageEntity, 'xml');
+        $xml = $this->subject->getSerializer()
+            ->serialize($packageEntity, 'xml');
 
         $newPackageEntity = $this->subject->getSerializer()->deserialize(
             $xml,

@@ -36,5 +36,34 @@
                   expose="true"
                   type="string"
                   serialized-name="description"/>
+        <property name="notes"
+                  expose="true"
+                  type="string"
+                  serialized-name="notes"/>
+        <property name="authors"
+                  expose="true"
+                  type="array&lt;DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package\Author&gt;"
+                  serialized-name="authors">
+            <xml-list inline="false" entry-name="author"/>
+        </property>
+        <property name="date"
+                  expose="true"
+                  type="string"
+                  serialized-name="date"/>
+        <property name="time"
+                  expose="true"
+                  type="string"
+                  serialized-name="time"/>
+        <property name="contents"
+                  expose="true"
+                  type="array&lt;DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package\Target&gt;"
+                  serialized-name="contents">
+            <xml-list inline="false" entry-name="target"/>
+        </property>
+        <property name="compatible"
+                  expose="true"
+                  type="string"
+                  serialized-name="compatible"/>
     </class>
 </serializer>
+

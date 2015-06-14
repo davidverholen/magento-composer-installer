@@ -1,0 +1,68 @@
+<?php
+ /**
+ * File.php
+ *
+ * PHP Version 5
+ *
+ * @category DavidVerholen_MagentoComposerInstaller
+ * @package  DavidVerholen_MagentoComposerInstaller
+ * @author   David Verholen <david@verholen.com>
+ * @license  http://opensource.org/licenses/OSL-3.0 OSL-3.0
+ * @link     http://github.com/davidverholen
+ */
+
+namespace DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package\Target;
+
+ /**
+ * Class File
+ *
+ * @category DavidVerholen_MagentoComposerInstaller
+ * @package  DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package\Target
+ * @author   David Verholen <david@verholen.com>
+ * @license  http://opensource.org/licenses/OSL-3.0 OSL-3.0
+ * @link     http://github.com/davidverholen
+ */
+class File
+{
+    /**
+     * @var string
+     */
+    protected $name;
+
+    /**
+     * @var string
+     */
+    protected $hash;
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHash()
+    {
+        return $this->hash;
+    }
+
+    /**
+     * @param string $hash
+     */
+    public function setHash($hash)
+    {
+        $this->hash = $hash;
+    }
+}

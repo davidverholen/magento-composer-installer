@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<serializer>
+    <class name="DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package\Target\File"
+           exclusion-policy="ALL"
+           xml-root-name="file"
+           accessor-order="alphabetical">
+        <property name="name"
+                  expose="true"
+                  type="string"
+                  xml-attribute="true"
+                  serialized-name="name"/>
+        <property name="hash"
+                  expose="true"
+                  type="string"
+                  xml-attribute="true"
+                  serialized-name="hash"/>
+    </class>
+</serializer>
