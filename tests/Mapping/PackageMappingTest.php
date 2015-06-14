@@ -16,6 +16,7 @@ namespace DavidVerholen\Magento\Composer\Installer\Mapping;
 use DavidVerholen\Magento\Composer\Installer\AbstractTest;
 use DavidVerholen\Magento\Composer\Installer\App\SerializerFactory;
 use DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package;
+use DavidVerholen\Magento\Composer\Installer\Plugin;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
@@ -96,5 +97,62 @@ class PackageMappingTest extends AbstractTest
         );
 
         $this->assertEquals($packageEntity, $newPackageEntity);
+    }
+
+    /**
+     * packageXmlFileNameDataProvider
+     *
+     * @return array
+     */
+    public function packageXmlFileNameDataProvider()
+    {
+        return [
+            ['dibsfw.xml']
+        ];
+    }
+
+    /**
+     * testParsePackageXmlFile
+     *
+     * @param $fileName
+     *
+     * @return void
+     *
+     * @dataProvider packageXmlFileNameDataProvider
+     */
+    public function testParsePackageXmlFile($fileName)
+    {
+        $xml = $this->getTestFileContent($fileName);
+
+        /** @var Package $packageEntity */
+        $packageEntity = $this->subject->getSerializer()->deserialize(
+            $xml,
+            'DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package',
+            'xml'
+        );
+
+        $this->assertEquals('Dibsfw', $packageEntity->getName());
+    }
+
+    /**
+     * getTestFile
+     *
+     * @param $name
+     *
+     * @return string
+     */
+    protected function getTestFileContent($name)
+    {
+        return file_get_contents(implode(
+            DIRECTORY_SEPARATOR,
+            [
+                APPLICATION_BASE_DIR,
+                Plugin::APP_RES_DIR,
+                'tests',
+                'mapping',
+                'package',
+                $name
+            ]
+        ));
     }
 }
