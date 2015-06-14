@@ -35,6 +35,11 @@ class PackageMapping extends AbstractMapping
     protected $serializer;
 
     /**
+     * @var array
+     */
+    protected $packageTargets;
+
+    /**
      * @param Filesystem $filesystem
      * @param Finder     $finder
      * @param Serializer $serializer
@@ -93,5 +98,21 @@ class PackageMapping extends AbstractMapping
     public function setSerializer($serializer)
     {
         $this->serializer = $serializer;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPackageTargets()
+    {
+        return $this->packageTargets;
+    }
+
+    /**
+     * @param array $packageTargets
+     */
+    public function setPackageTargets($packageTargets)
+    {
+        $this->packageTargets = $packageTargets;
     }
 }

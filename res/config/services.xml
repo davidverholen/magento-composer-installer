@@ -5,14 +5,32 @@
 
     <parameters>
         <parameter key="logger.name">magento-composer-installer</parameter>
+
         <parameter key="composer.package.types" type="collection">
             <parameter>magento-module</parameter>
             <parameter>magento-core</parameter>
         </parameter>
+
         <parameter key="modman.file.name">modman</parameter>
+
         <parameter key="modman.ignoreLineCharacters" type="collection">
             <parameter>@</parameter>
             <parameter>#</parameter>
+        </parameter>
+
+        <parameter key="magento.package.targets" type="collection">
+            <parameter key="magelocal">./app/code/local</parameter>
+            <parameter key="magecommunity">./app/code/community</parameter>
+            <parameter key="magecore">./app/code/core</parameter>
+            <parameter key="magedesign">./app/design</parameter>
+            <parameter key="mageetc">./app/etc</parameter>
+            <parameter key="magelib">./lib</parameter>
+            <parameter key="magelocale">./app/locale</parameter>
+            <parameter key="magemedia">./media</parameter>
+            <parameter key="mageskin">./skin</parameter>
+            <parameter key="mageweb">.</parameter>
+            <parameter key="magetest">./tests</parameter>
+            <parameter key="mage">.</parameter>
         </parameter>
     </parameters>
 
@@ -69,6 +87,9 @@
                  class="DavidVerholen\Magento\Composer\Installer\Mapping\PackageMapping"
                  parent="abstractMapping">
             <argument type="service" id="serializer"/>
+            <call method="setPackageTargets">
+                <argument>%magento.package.targets%</argument>
+            </call>
         </service>
 
         <service id="mappingService"
@@ -81,6 +102,9 @@
             </call>
             <call method="addMapping">
                 <argument type="service" id="modmanMapping"/>
+            </call>
+            <call method="addMapping">
+                <argument type="service" id="packageMapping"/>
             </call>
         </service>
 

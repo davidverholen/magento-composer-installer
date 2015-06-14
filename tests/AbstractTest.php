@@ -19,6 +19,7 @@ use Composer\Factory;
 use Composer\IO\ConsoleIO;
 use Composer\IO\IOInterface;
 use Composer\Package\Package;
+use DavidVerholen\Magento\Composer\Installer\App\SerializerFactory;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -54,6 +55,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->root = vfsStream::setup('root');
+        SerializerFactory::setMetadataDir($this->getMetadataDir());
 
         parent::setUp();
     }
@@ -125,6 +127,22 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
                 APPLICATION_BASE_DIR,
                 Plugin::APP_RES_DIR,
                 Plugin::APP_CONFIG_DIR
+            ]
+        );
+    }
+
+    /**
+     * getMetadataDir
+     *
+     * @return string
+     */
+    protected function getMetadataDir()
+    {
+        return implode(
+            DIRECTORY_SEPARATOR,
+            [
+                $this->getTestServiceConfigDir(),
+                Plugin::APP_SERIALIZER_CONFIG_DIR
             ]
         );
     }

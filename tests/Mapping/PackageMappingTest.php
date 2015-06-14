@@ -16,7 +16,6 @@ namespace DavidVerholen\Magento\Composer\Installer\Mapping;
 use DavidVerholen\Magento\Composer\Installer\AbstractTest;
 use DavidVerholen\Magento\Composer\Installer\App\SerializerFactory;
 use DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package;
-use DavidVerholen\Magento\Composer\Installer\Plugin;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
@@ -34,10 +33,30 @@ class PackageMappingTest extends AbstractTest
     /** @var PackageMapping */
     protected $subject;
 
+    /**
+     * _targets
+     *
+     * @var array
+     */
+    protected $targets
+        = array(
+            'magelocal'     => './app/code/local',
+            'magecommunity' => './app/code/community',
+            'magecore'      => './app/code/core',
+            'magedesign'    => './app/design',
+            'mageetc'       => './app/etc',
+            'magelib'       => './lib',
+            'magelocale'    => './app/locale',
+            'magemedia'     => './media',
+            'mageskin'      => './skin',
+            'mageweb'       => '.',
+            'magetest'      => './tests',
+            'mage'          => '.'
+        );
+
     protected function setUp()
     {
         parent::setUp();
-        SerializerFactory::setMetadataDir($this->getMetadataDir());
 
         $this->subject = new PackageMapping(
             new Filesystem(),
@@ -45,23 +64,8 @@ class PackageMappingTest extends AbstractTest
             SerializerFactory::createSerializer()
         );
 
+        $this->subject->setPackageTargets($this->targets);
         $this->subject->setPackage($this->getDummyPackage());
-    }
-
-    /**
-     * getMetadataDir
-     *
-     * @return string
-     */
-    protected function getMetadataDir()
-    {
-        return implode(
-            DIRECTORY_SEPARATOR,
-            [
-                $this->getTestServiceConfigDir(),
-                Plugin::APP_SERIALIZER_CONFIG_DIR
-            ]
-        );
     }
 
     public function testSerialize()
