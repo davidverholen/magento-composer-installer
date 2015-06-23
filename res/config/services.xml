@@ -43,9 +43,10 @@
         <service id="finder" class="Symfony\Component\Finder\Finder"/>
 
         <service id="serializerFactory" class="DavidVerholen\Magento\Composer\Installer\App\SerializerFactory"/>
-        <service id="serializer" class="JMS\Serializer\Serializer">
-            <factory service="serializerFactory" method="createSerializer"/>
-        </service>
+        <service id="serializer"
+                 class="JMS\Serializer\Serializer"
+                 factory-service="serializerFactory"
+                 factory-method="createSerializer"/>
 
         <service id="abstractService" abstract="true">
             <call method="setLogger">
