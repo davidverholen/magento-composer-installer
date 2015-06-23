@@ -15,7 +15,6 @@ namespace DavidVerholen\Magento\Composer\Installer;
 
 use Composer\Composer;
 use Composer\Config;
-use Composer\Factory;
 use Composer\IO\ConsoleIO;
 use Composer\IO\IOInterface;
 use Composer\Package\Package;
@@ -158,5 +157,27 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
         $package->setTargetDir(vfsStream::url('root'));
 
         return $package;
+    }
+
+    /**
+     * getTestFileContent
+     *
+     * @param $path
+     *
+     * @return string
+     */
+    protected function getTestFileContent(array $path)
+    {
+        return file_get_contents(implode(
+            DIRECTORY_SEPARATOR,
+            array_merge(
+                [
+                    APPLICATION_BASE_DIR,
+                    Plugin::APP_RES_DIR,
+                    'tests'
+                ],
+                $path
+            )
+        ));
     }
 }

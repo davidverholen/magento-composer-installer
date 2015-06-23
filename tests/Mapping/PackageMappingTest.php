@@ -16,7 +16,7 @@ namespace DavidVerholen\Magento\Composer\Installer\Mapping;
 use DavidVerholen\Magento\Composer\Installer\AbstractTest;
 use DavidVerholen\Magento\Composer\Installer\App\SerializerFactory;
 use DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package;
-use DavidVerholen\Magento\Composer\Installer\Plugin;
+use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
@@ -31,6 +31,12 @@ use Symfony\Component\Finder\Finder;
  */
 class PackageMappingTest extends AbstractTest
 {
+    const PACKAGE_ENTITY_CLASS = 'DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package';
+
+    const SERIALIZE_FORMAT = 'xml';
+
+    const PACKAGE_FILENAME = 'package.xml';
+
     /** @var PackageMapping */
     protected $subject;
 
@@ -67,6 +73,9 @@ class PackageMappingTest extends AbstractTest
 
         $this->subject->setPackageTargets($this->targets);
         $this->subject->setPackage($this->getDummyPackage());
+        $this->subject->setPackageEntityClass(self::PACKAGE_ENTITY_CLASS);
+        $this->subject->setSerializeFormat(self::SERIALIZE_FORMAT);
+        $this->subject->setPackageFileName(self::PACKAGE_FILENAME);
     }
 
     public function testSerialize()
@@ -107,7 +116,7 @@ class PackageMappingTest extends AbstractTest
     public function packageXmlFileNameDataProvider()
     {
         return [
-            ['dibsfw.xml']
+            ['dibsfw.xml', 'Dibsfw']
         ];
     }
 
@@ -115,44 +124,70 @@ class PackageMappingTest extends AbstractTest
      * testParsePackageXmlFile
      *
      * @param $fileName
+     * @param $packageName
+     *
+     * @dataProvider packageXmlFileNameDataProvider
+     */
+    public function testParsePackageXmlFile($fileName, $packageName)
+    {
+        $this->createDummyPackageFile($fileName);
+        $this->assertEquals(
+            $packageName,
+            $this->subject->getPackageEntity()->getName()
+        );
+    }
+
+    /**
+     * testSupports
+     *
+     * @param $fileName
+     * @param $packageName
      *
      * @return void
      *
      * @dataProvider packageXmlFileNameDataProvider
      */
-    public function testParsePackageXmlFile($fileName)
+    public function testSupports($fileName, $packageName)
     {
-        $xml = $this->getTestFileContent($fileName);
-
-        /** @var Package $packageEntity */
-        $packageEntity = $this->subject->getSerializer()->deserialize(
-            $xml,
-            'DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package',
-            'xml'
-        );
-
-        $this->assertEquals('Dibsfw', $packageEntity->getName());
+        $this->createDummyPackageFile($fileName);
+        $this->assertTrue($this->subject->isSupported($this->getDummyPackage()));
     }
 
     /**
-     * getTestFile
+     * testSupportsNot
      *
-     * @param $name
+     * @param $fileName
+     * @param $packageName
+     *
+     * @return void
+     *
+     * @dataProvider packageXmlFileNameDataProvider
+     */
+    public function testSupportsNot($fileName, $packageName)
+    {
+        $this->assertFalse($this->subject->isSupported($this->getDummyPackage()));
+    }
+
+    /**
+     * getPackageFilePath
      *
      * @return string
      */
-    protected function getTestFileContent($name)
+    protected function getPackageFilePath()
     {
-        return file_get_contents(implode(
-            DIRECTORY_SEPARATOR,
-            [
-                APPLICATION_BASE_DIR,
-                Plugin::APP_RES_DIR,
-                'tests',
-                'mapping',
-                'package',
-                $name
-            ]
-        ));
+        return vfsStream::url('root/package.xml');
+    }
+
+    /**
+     * createDummyPackageFile
+     *
+     * @param $testFileName
+     */
+    protected function createDummyPackageFile($testFileName)
+    {
+        file_put_contents(
+            $this->getPackageFilePath(),
+            $this->getTestFileContent(['mapping', 'package', $testFileName])
+        );
     }
 }
