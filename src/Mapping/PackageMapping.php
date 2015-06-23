@@ -14,9 +14,11 @@
 namespace DavidVerholen\Magento\Composer\Installer\Mapping;
 
 use Composer\Package\Package;
+use DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package\Target;
 use JMS\Serializer\Serializer;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Class PackageMapping
@@ -40,6 +42,26 @@ class PackageMapping extends AbstractMapping
     protected $packageTargets;
 
     /**
+     * @var string
+     */
+    protected $packageFileName;
+
+    /**
+     * @var SplFileInfo
+     */
+    protected $packageFile;
+
+    /**
+     * @var string
+     */
+    protected $packageEntityClass;
+
+    /**
+     * @var string
+     */
+    protected $serializeFormat;
+
+    /**
      * @param Filesystem $filesystem
      * @param Finder     $finder
      * @param Serializer $serializer
@@ -57,7 +79,6 @@ class PackageMapping extends AbstractMapping
         $this->serializer = $serializer;
     }
 
-
     /**
      * isSupported
      *
@@ -69,7 +90,7 @@ class PackageMapping extends AbstractMapping
      */
     public function isSupported(Package $package)
     {
-        // TODO: Implement isSupported() method.
+        return null !== $this->getPackageFile();
     }
 
     /**
@@ -81,7 +102,89 @@ class PackageMapping extends AbstractMapping
      */
     public function getMappings()
     {
+        /** @var Target $target */
+        foreach($this->getPackageEntity()->getContents() as $target) {
+
+        }
         // TODO: Implement getMappings() method.
+    }
+
+    /**
+     * getPackageFile
+     *
+     * @return SplFileInfo
+     */
+    public function getPackageFile()
+    {
+        return $this->getRootDirFile($this->getPackageFileName());
+    }
+
+    /**
+     * @return string
+     */
+    public function getPackageXml()
+    {
+        return $this->getPackageFile()->getContents();
+    }
+
+    /**
+     * @return \DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package
+     */
+    public function getPackageEntity()
+    {
+        return $this->getSerializer()->deserialize(
+            $this->getPackageXml(),
+            $this->getPackageEntityClass(),
+            $this->getSerializeFormat()
+        );
+    }
+
+    /**
+     * @return string
+     */
+    public function getSerializeFormat()
+    {
+        return $this->serializeFormat;
+    }
+
+    /**
+     * @param string $serializeFormat
+     */
+    public function setSerializeFormat($serializeFormat)
+    {
+        $this->serializeFormat = $serializeFormat;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPackageEntityClass()
+    {
+        return $this->packageEntityClass;
+    }
+
+    /**
+     * @param string $packageEntityClass
+     */
+    public function setPackageEntityClass($packageEntityClass)
+    {
+        $this->packageEntityClass = $packageEntityClass;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPackageFileName()
+    {
+        return $this->packageFileName;
+    }
+
+    /**
+     * @param string $packageFileName
+     */
+    public function setPackageFileName($packageFileName)
+    {
+        $this->packageFileName = $packageFileName;
     }
 
     /**

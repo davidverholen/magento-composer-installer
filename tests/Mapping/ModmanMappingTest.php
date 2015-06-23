@@ -120,8 +120,8 @@ class ModmanMappingTest extends AbstractTest
     {
         $this->createDummyModmanFile($modmanData);
 
-        for ($i = 0; $i < count($this->subject->getModmanFileLines()); $i++) {
-            $line = explode(' ', $this->subject->getModmanFileLines()[$i]);
+        for ($i = 0; $i < count($this->subject->getFileLines($this->subject->getModmanFile())); $i++) {
+            $line = explode(' ', $this->subject->getFileLines($this->subject->getModmanFile())[$i]);
 
             $source = trim($line[0]);
             $target = trim($line[1]);

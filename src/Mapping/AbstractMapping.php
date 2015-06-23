@@ -16,6 +16,7 @@ namespace DavidVerholen\Magento\Composer\Installer\Mapping;
 use Composer\Package\Package;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Class AbstractMapping
@@ -96,5 +97,40 @@ abstract class AbstractMapping implements MappingInterface
     protected function getFinder()
     {
         return $this->finder;
+    }
+
+    /**
+     * getFileLines
+     *
+     * @param SplFileInfo $file
+     *
+     * @return array
+     */
+    public function getFileLines(SplFileInfo $file)
+    {
+        return explode("\n", $file->getContents());
+    }
+
+    /**
+     * getPackageFile
+     *
+     * @param string $filename
+     *
+     * @return SplFileInfo
+     */
+    public function getRootDirFile($filename)
+    {
+        $finder = $this->getFinder()
+            ->create()
+            ->in($this->getPackage()->getTargetDir())
+            ->name($filename)
+            ->depth(0)
+            ->files();
+
+        foreach ($finder as $file) {
+            return $file;
+        }
+
+        return null;
     }
 }

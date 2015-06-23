@@ -12,6 +12,7 @@
         </parameter>
 
         <parameter key="modman.file.name">modman</parameter>
+	    <parameter key="package.file.name">package.xml</parameter>
 
         <parameter key="modman.ignoreLineCharacters" type="collection">
             <parameter>@</parameter>
@@ -32,6 +33,9 @@
             <parameter key="magetest">./tests</parameter>
             <parameter key="mage">.</parameter>
         </parameter>
+
+	    <parameter key="package.entity.class">DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package</parameter>
+	    <parameter key="package.serialize.format">xml</parameter>
     </parameters>
 
     <services>
@@ -91,6 +95,15 @@
             <call method="setPackageTargets">
                 <argument>%magento.package.targets%</argument>
             </call>
+	        <call method="setPackageFileName">
+		        <argument>%package.file.name%</argument>
+	        </call>
+	        <call method="setPackageEntityClass">
+		        <argument>%package.entity.class%</argument>
+	        </call>
+	        <call method="setSerializeFormat">
+		        <argument>%package.serialize.format%</argument>
+	        </call>
         </service>
 
         <service id="mappingService"

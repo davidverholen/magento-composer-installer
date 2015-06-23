@@ -98,7 +98,7 @@ class ModmanMapping extends AbstractMapping
     public function getMappings()
     {
         $map = [];
-        foreach ($this->getModmanFileLines() as $line) {
+        foreach ($this->getFileLines($this->getModmanFile()) as $line) {
             $firstChar = substr(trim($line), 0, 1);
             if (!in_array($firstChar, $this->getIgnoreLinesCharacters())) {
                 $lineParts = explode(' ', trim($line));
@@ -116,27 +116,6 @@ class ModmanMapping extends AbstractMapping
      */
     public function getModmanFile()
     {
-        $finder = $this->getFinder()
-            ->create()
-            ->in($this->getPackage()->getTargetDir())
-            ->name($this->getModmanFileName())
-            ->depth(0)
-            ->files();
-
-        foreach ($finder as $file) {
-            return $file;
-        }
-
-        return null;
-    }
-
-    /**
-     * getModmanFileLines
-     *
-     * @return array
-     */
-    public function getModmanFileLines()
-    {
-        return explode("\n", $this->getModmanFile()->getContents());
+        return $this->getRootDirFile($this->getModmanFileName());
     }
 }
