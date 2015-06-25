@@ -57,13 +57,38 @@ class LoggerService
             return;
         }
 
-        $messages = is_array($messages) ? $messages : array($messages);
-        $formatString = $wrapper !== null
+        foreach ($this->normalizeMessages($messages) as $message) {
+            $this->io->write(
+                sprintf($this->getFormatString($wrapper), $message)
+            );
+        }
+    }
+
+    /**
+     * getFormatString
+     *
+     * @param string $wrapper
+     *
+     * @return string
+     */
+    protected function getFormatString($wrapper)
+    {
+        return $wrapper !== null
             ? sprintf('<%1$s>%%s</%1$s>', $wrapper)
             : '%s';
+    }
 
-        foreach ($messages as $message) {
-            $this->io->write(sprintf($formatString, $message));
-        }
+    /**
+     * normalizeMessages
+     *
+     * @param $messages
+     *
+     * @return array
+     */
+    protected function normalizeMessages($messages)
+    {
+        return is_array($messages)
+            ? $messages
+            : array($messages);
     }
 }
