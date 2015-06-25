@@ -40,9 +40,10 @@
     </parameters>
 
     <services>
-        <service id="logger" class="Monolog\Logger">
-            <argument>%logger.name%</argument>
-        </service>
+        <service id="logger"
+                 class="DavidVerholen\Magento\Composer\Installer\App\LoggerService"
+                 factory-class="DavidVerholen\Magento\Composer\Installer\App\LoggerFactory"
+                 factory-method="createLogger"/>
 
         <service id="filesystem" class="Symfony\Component\Filesystem\Filesystem"/>
         <service id="finder" class="Symfony\Component\Finder\Finder"/>

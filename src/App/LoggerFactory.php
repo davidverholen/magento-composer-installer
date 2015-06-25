@@ -1,6 +1,6 @@
 <?php
-/**
- * Base.php
+ /**
+ * LoggerFactory.php
  *
  * PHP Version 5
  *
@@ -13,40 +13,44 @@
 
 namespace DavidVerholen\Magento\Composer\Installer\App;
 
+use Composer\IO\IOInterface;
 
 /**
- * Class Base
+ * Class LoggerFactory
  *
  * @category DavidVerholen_MagentoComposerInstaller
- * @package  DavidVerholen\Magento\Composer\Installer\Service
+ * @package  App
  * @author   David Verholen <david@verholen.com>
  * @license  http://opensource.org/licenses/OSL-3.0 OSL-3.0
  * @link     http://github.com/davidverholen
  */
-abstract class AbstractService
+class LoggerFactory
 {
     /**
-     * @todo pass logger output through to composer IOInterface
-     *
-     * @var LoggerService
+     * @var IOInterface
      */
-    private $logger;
+    protected static $io;
 
     /**
-     * @param LoggerService $logger
+     * createLogger
+     *
+     * @return LoggerService
+     * @throws \Exception
      */
-    public function setLogger($logger)
+    public static function createLogger()
     {
-        $this->logger = $logger;
+        if (null === self::$io) {
+            throw new \Exception('No IOInterface set for Logger Factory');
+        }
+
+        return new LoggerService(self::$io);
     }
 
     /**
-     * getLogger
-     *
-     * @return LoggerService
+     * @param IOInterface $io
      */
-    public function getLogger()
+    public static function setIo($io)
     {
-        return $this->logger;
+        self::$io = $io;
     }
 }

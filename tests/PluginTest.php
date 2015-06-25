@@ -69,19 +69,6 @@ class PluginTest extends AbstractTest
         );
     }
 
-    public function testGetLogger()
-    {
-        /** @var DeployService $deployService */
-        $deployService = $this->subject->getServiceContainer()
-            ->get('deployService');
-        $logger = $deployService->getLogger();
-
-        $this->assertEquals(
-            'magento-composer-installer',
-            $logger->getName()
-        );
-    }
-
     public function testGetFilesystemFromMapping()
     {
         /** @var DeployService $deployService */

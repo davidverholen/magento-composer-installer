@@ -14,6 +14,7 @@
 
 namespace DavidVerholen\Magento\Composer\Installer;
 
+use DavidVerholen\Magento\Composer\Installer\App\LoggerFactory;
 use DavidVerholen\Magento\Composer\Installer\App\SerializerFactory;
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
@@ -107,24 +108,24 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      */
     public function activate(Composer $composer, IOInterface $io)
     {
-        $this->initServiceContainer($composer, $io);
-        $this->initSerializer($composer, $io);
+        $this->initServiceContainer($composer);
+        $this->initSerializer($composer);
+        $this->initLogger($io);
     }
 
     /**
      * initServiceContainer
      *
      * @param Composer    $composer
-     * @param IOInterface $io
      *
      * @return void
      */
-    private function initServiceContainer(Composer $composer, IOInterface $io)
+    private function initServiceContainer(Composer $composer)
     {
         $this->container = new ContainerBuilder();
         $loader = new XmlFileLoader(
             $this->container,
-            new FileLocator($this->getServiceConfigDir($composer, $io))
+            new FileLocator($this->getServiceConfigDir($composer))
         );
         $loader->load(self::APP_SERVICE_MAIN_CONFIG);
         $this->container->compile();
@@ -134,21 +135,32 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      * initSerializer
      *
      * @param Composer    $composer
-     * @param IOInterface $io
      *
      * @return void
      */
-    private function initSerializer(Composer $composer, IOInterface $io)
+    private function initSerializer(Composer $composer)
     {
         SerializerFactory::setMetadataDir(
             implode(
                 DIRECTORY_SEPARATOR,
                 [
-                    $this->getServiceConfigDir($composer, $io),
+                    $this->getServiceConfigDir($composer),
                     self::APP_SERIALIZER_CONFIG_DIR
                 ]
             )
         );
+    }
+
+    /**
+     * initLogger
+     *
+     * @param IOInterface $io
+     *
+     * @return void
+     */
+    protected function initLogger(IOInterface $io)
+    {
+        LoggerFactory::setIo($io);
     }
 
     /**
@@ -165,11 +177,10 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      * getApplicationDir
      *
      * @param Composer    $composer
-     * @param IOInterface $io
      *
      * @return string
      */
-    protected function getApplicationDir(Composer $composer, IOInterface $io)
+    protected function getApplicationDir(Composer $composer)
     {
         return implode(
             DIRECTORY_SEPARATOR,
@@ -197,17 +208,16 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      * getServiceConfigFilePath
      *
      * @param Composer    $composer
-     * @param IOInterface $io
      *
      * @return string
      */
-    protected function getServiceConfigDir(Composer $composer, IOInterface $io)
+    protected function getServiceConfigDir(Composer $composer)
     {
         if (null === $this->serviceConfigDir) {
             $this->serviceConfigDir = implode(
                 DIRECTORY_SEPARATOR,
                 [
-                    $this->getApplicationDir($composer, $io),
+                    $this->getApplicationDir($composer),
                     self::APP_RES_DIR,
                     self::APP_CONFIG_DIR
                 ]
