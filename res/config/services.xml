@@ -138,6 +138,7 @@
             <argument>%composer.package.types%</argument>
             <argument type="service" id="mappingService"/>
             <argument type="service" id="composer"/>
+            <argument type="service" id="filesystem"/>
         </service>
     </services>
 </container>

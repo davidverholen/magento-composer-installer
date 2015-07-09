@@ -13,7 +13,7 @@
 
 namespace DavidVerholen\Magento\Composer\Installer\Mapping;
 
-use Composer\Package\Package;
+use Composer\Package\PackageInterface;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
@@ -79,11 +79,11 @@ class ModmanMapping extends AbstractMapping
      *
      * checks if the mapping is supported by the package
      *
-     * @param Package $package
+     * @param PackageInterface $package
      *
      * @return boolean
      */
-    public function isSupported(Package $package)
+    public function isSupported(PackageInterface $package)
     {
         return null !== $this->getModmanFile();
     }

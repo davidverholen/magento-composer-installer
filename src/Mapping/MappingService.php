@@ -13,7 +13,7 @@
 
 namespace DavidVerholen\Magento\Composer\Installer\Mapping;
 
-use Composer\Package\Package;
+use Composer\Package\PackageInterface;
 use DavidVerholen\Magento\Composer\Installer\App\AbstractService;
 
 /**
@@ -58,11 +58,11 @@ class MappingService extends AbstractService
     /**
      * getMappings
      *
-     * @param Package $package
+     * @param PackageInterface $package
      *
      * @return array
      */
-    public function getMappings(Package $package)
+    public function getMappings(PackageInterface $package)
     {
         return $this->getResolverService()->resolve($this->createMapping($package));
     }
@@ -70,11 +70,11 @@ class MappingService extends AbstractService
     /**
      * createMapping
      *
-     * @param Package $package
+     * @param PackageInterface $package
      *
      * @return MappingInterface
      */
-    protected function createMapping(Package $package)
+    protected function createMapping(PackageInterface $package)
     {
         foreach ($this->mappings as $mapping) {
             if ($mapping->isSupported($package)) {

@@ -14,9 +14,10 @@
 namespace DavidVerholen\Magento\Composer\Installer\Deploy;
 
 use Composer\Composer;
-use Composer\Package\Package;
+use Composer\Package\PackageInterface;
 use DavidVerholen\Magento\Composer\Installer\App\AbstractService;
 use DavidVerholen\Magento\Composer\Installer\Mapping\MappingService;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Class Service
@@ -45,18 +46,26 @@ class DeployService extends AbstractService
     protected $composer;
 
     /**
+     * @var Filesystem
+     */
+    protected $filesystem;
+
+    /**
      * @param                $packageTypes
      * @param MappingService $mappingService
      * @param Composer       $composer
+     * @param Filesystem     $filesystem
      */
     public function __construct(
         $packageTypes,
         MappingService $mappingService,
-        Composer $composer
+        Composer $composer,
+        Filesystem $filesystem
     ) {
         $this->packageTypes = $packageTypes;
         $this->mappingService = $mappingService;
         $this->composer = $composer;
+        $this->filesystem = $filesystem;
     }
 
     /**
@@ -99,12 +108,58 @@ class DeployService extends AbstractService
     }
 
     /**
+     * @return Filesystem
+     */
+    public function getFilesystem()
+    {
+        return $this->filesystem;
+    }
+
+    /**
      * deploy
      *
      * @return void
      */
     public function deploy()
     {
-        /** @todo start deployment */
+        /** @var PackageInterface $package */
+        foreach ($this->getPackages() as $package) {
+            $mappings = $this->getMappingService()->getMappings($package);
+            foreach ($mappings as $source => $target) {
+                $this->getFilesystem()->mirror(
+                    implode(
+                        DIRECTORY_SEPARATOR,
+                        [$this->getSourceDir($package), $source]
+                    ),
+                    implode(
+                        DIRECTORY_SEPARATOR,
+                        [$this->getTargetDir(), $target]
+                    )
+                );
+            }
+        }
+    }
+
+    /**
+     * getSourceDir
+     *
+     * @param PackageInterface $package
+     *
+     * @return string
+     */
+    public function getSourceDir(PackageInterface $package)
+    {
+        return $package->getTargetDir();
+    }
+
+    /**
+     * getTargetDir
+     *
+     * @return string
+     */
+    public function getTargetDir()
+    {
+        /** @todo remove dummy release dir */
+        return 'release' . DIRECTORY_SEPARATOR . '1';
     }
 }

@@ -13,7 +13,7 @@
 
 namespace DavidVerholen\Magento\Composer\Installer\Mapping;
 
-use Composer\Package\Package;
+use Composer\Package\PackageInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -30,7 +30,7 @@ use Symfony\Component\Finder\SplFileInfo;
 abstract class AbstractMapping implements MappingInterface
 {
     /**
-     * @var Package
+     * @var PackageInterface
      */
     private $package;
 
@@ -59,11 +59,11 @@ abstract class AbstractMapping implements MappingInterface
     /**
      * setPackage
      *
-     * @param Package $package
+     * @param PackageInterface $package
      *
      * @return $this
      */
-    public function setPackage(Package $package)
+    public function setPackage(PackageInterface $package)
     {
         $this->package = $package;
         return $this;
@@ -72,7 +72,7 @@ abstract class AbstractMapping implements MappingInterface
     /**
      * getPackage
      *
-     * @return Package
+     * @return PackageInterface
      */
     protected function getPackage()
     {
