@@ -46,7 +46,6 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     const APP_RES_DIR = 'res';
     const APP_CONFIG_DIR = 'config';
-    const APP_SERIALIZER_CONFIG_DIR = 'serializer';
     const APP_SERVICE_MAIN_CONFIG = 'services.xml';
 
     /**
@@ -108,9 +107,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      */
     public function activate(Composer $composer, IOInterface $io)
     {
-        $this->initServiceContainer($composer);
-        $this->initSerializer($composer);
-        $this->initLogger($io);
+        $this->initServiceContainer($composer, $io);
     }
 
     /**
@@ -118,9 +115,9 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      *
      * @param Composer    $composer
      *
-     * @return void
+     * @param IOInterface $io
      */
-    private function initServiceContainer(Composer $composer)
+    private function initServiceContainer(Composer $composer, IOInterface $io)
     {
         $this->container = new ContainerBuilder();
         $loader = new XmlFileLoader(
@@ -128,39 +125,12 @@ class Plugin implements PluginInterface, EventSubscriberInterface
             new FileLocator($this->getServiceConfigDir($composer))
         );
         $loader->load(self::APP_SERVICE_MAIN_CONFIG);
+
+        $this->container->set('composer', $composer);
+        $this->container->set('io', $io);
+        $this->container->set('plugin', $this);
+
         $this->container->compile();
-    }
-
-    /**
-     * initSerializer
-     *
-     * @param Composer    $composer
-     *
-     * @return void
-     */
-    private function initSerializer(Composer $composer)
-    {
-        SerializerFactory::setMetadataDir(
-            implode(
-                DIRECTORY_SEPARATOR,
-                [
-                    $this->getServiceConfigDir($composer),
-                    self::APP_SERIALIZER_CONFIG_DIR
-                ]
-            )
-        );
-    }
-
-    /**
-     * initLogger
-     *
-     * @param IOInterface $io
-     *
-     * @return void
-     */
-    protected function initLogger(IOInterface $io)
-    {
-        LoggerFactory::setIo($io);
     }
 
     /**
@@ -180,7 +150,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      *
      * @return string
      */
-    protected function getApplicationDir(Composer $composer)
+    public function getApplicationDir(Composer $composer)
     {
         return implode(
             DIRECTORY_SEPARATOR,
@@ -211,7 +181,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      *
      * @return string
      */
-    protected function getServiceConfigDir(Composer $composer)
+    public function getServiceConfigDir(Composer $composer)
     {
         if (null === $this->serviceConfigDir) {
             $this->serviceConfigDir = implode(

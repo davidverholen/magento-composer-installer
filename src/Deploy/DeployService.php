@@ -13,6 +13,7 @@
 
 namespace DavidVerholen\Magento\Composer\Installer\Deploy;
 
+use Composer\Package\Package;
 use DavidVerholen\Magento\Composer\Installer\App\AbstractService;
 use DavidVerholen\Magento\Composer\Installer\Mapping\MappingService;
 use Monolog\Logger;
@@ -39,6 +40,11 @@ class DeployService extends AbstractService
     protected $mappingService;
 
     /**
+     * @var Package[]
+     */
+    protected $packages;
+
+    /**
      * @param                $packageTypes
      * @param MappingService $mappingService
      */
@@ -48,6 +54,8 @@ class DeployService extends AbstractService
     ) {
         $this->packageTypes = $packageTypes;
         $this->mappingService = $mappingService;
+
+        $this->packages = [];
     }
 
     /**
@@ -68,6 +76,34 @@ class DeployService extends AbstractService
     public function getMappingService()
     {
         return $this->mappingService;
+    }
+
+    /**
+     * @return \Composer\Package\Package[]
+     */
+    public function getPackages()
+    {
+        return $this->packages;
+    }
+
+    /**
+     * @param \Composer\Package\Package[] $packages
+     */
+    public function setPackages($packages)
+    {
+        $this->packages = $packages;
+    }
+
+    /**
+     * addPackage
+     *
+     * @param Package $package
+     *
+     * @return void
+     */
+    public function addPackage(Package $package)
+    {
+        $this->packages[] = $package;
     }
 
     /**

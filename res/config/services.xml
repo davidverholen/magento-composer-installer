@@ -41,14 +41,22 @@
 
     <services>
         <service id="logger"
-                 class="DavidVerholen\Magento\Composer\Installer\App\LoggerService"
-                 factory-class="DavidVerholen\Magento\Composer\Installer\App\LoggerFactory"
-                 factory-method="createLogger"/>
+                 class="DavidVerholen\Magento\Composer\Installer\App\LoggerService">
+            <argument type="service" id="io"/>
+        </service>
 
         <service id="filesystem" class="Symfony\Component\Filesystem\Filesystem"/>
         <service id="finder" class="Symfony\Component\Finder\Finder"/>
 
-        <service id="serializerFactory" class="DavidVerholen\Magento\Composer\Installer\App\SerializerFactory"/>
+        <service id="serializerFactory"
+                 class="DavidVerholen\Magento\Composer\Installer\App\SerializerFactory">
+            <call method="setComposer">
+                <argument type="service" id="composer"/>
+            </call>
+            <call method="setPlugin">
+                <argument type="service" id="plugin"/>
+            </call>
+        </service>
         <service id="serializer"
                  class="JMS\Serializer\Serializer"
                  factory-service="serializerFactory"

@@ -54,6 +54,8 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->root = vfsStream::setup('root');
+
+        SerializerFactory::setComposer($this->getComposer());
         SerializerFactory::setMetadataDir($this->getMetadataDir());
 
         parent::setUp();
@@ -141,7 +143,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
             DIRECTORY_SEPARATOR,
             [
                 $this->getTestServiceConfigDir(),
-                Plugin::APP_SERIALIZER_CONFIG_DIR
+                SerializerFactory::APP_SERIALIZER_CONFIG_DIR
             ]
         );
     }

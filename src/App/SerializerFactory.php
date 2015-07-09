@@ -13,6 +13,8 @@
 
 namespace DavidVerholen\Magento\Composer\Installer\App;
 
+use Composer\Composer;
+use DavidVerholen\Magento\Composer\Installer\Plugin;
 use JMS\Serializer\SerializerBuilder;
 
 /**
@@ -26,10 +28,22 @@ use JMS\Serializer\SerializerBuilder;
  */
 class SerializerFactory
 {
+    const APP_SERIALIZER_CONFIG_DIR = 'serializer';
+
     /**
      * @var string
      */
     protected static $metaDataDir;
+
+    /**
+     * @var Composer
+     */
+    protected static $composer;
+
+    /**
+     * @var Plugin
+     */
+    protected static $plugin;
 
     /**
      * createSerializer
@@ -39,7 +53,7 @@ class SerializerFactory
      */
     public static function createSerializer()
     {
-        if (null === self::$metaDataDir) {
+        if (null === self::getMetadataDir(self::getComposer())) {
             throw new \Exception('No Metadatadir set for Serializer Factory');
         }
 
@@ -51,12 +65,64 @@ class SerializerFactory
     /**
      * setMetadataDir
      *
-     * @param $metaDataDir
+     * @param Composer $composer
      *
-     * @return void
+     * @internal param $metaDataDir
+     *
+     * @return string
      */
-    public static function setMetadataDir($metaDataDir)
+    public static function getMetadataDir(Composer $composer)
+    {
+        if (null === self::$metaDataDir) {
+            self::$metaDataDir = implode(
+                DIRECTORY_SEPARATOR,
+                [
+                    self::$plugin->getServiceConfigDir($composer),
+                    self::APP_SERIALIZER_CONFIG_DIR
+                ]
+            );
+        }
+
+        return self::$metaDataDir;
+    }
+
+    /**
+     * @param string $metaDataDir
+     */
+    public static function setMetaDataDir($metaDataDir)
     {
         self::$metaDataDir = $metaDataDir;
+    }
+
+    /**
+     * @return Composer
+     */
+    public static function getComposer()
+    {
+        return self::$composer;
+    }
+
+    /**
+     * @param Composer $composer
+     */
+    public static function setComposer($composer)
+    {
+        self::$composer = $composer;
+    }
+
+    /**
+     * @return Plugin
+     */
+    public static function getPlugin()
+    {
+        return self::$plugin;
+    }
+
+    /**
+     * @param Plugin $plugin
+     */
+    public static function setPlugin($plugin)
+    {
+        self::$plugin = $plugin;
     }
 }
