@@ -13,10 +13,10 @@
 
 namespace DavidVerholen\Magento\Composer\Installer\Deploy;
 
+use Composer\Composer;
 use Composer\Package\Package;
 use DavidVerholen\Magento\Composer\Installer\App\AbstractService;
 use DavidVerholen\Magento\Composer\Installer\Mapping\MappingService;
-use Monolog\Logger;
 
 /**
  * Class Service
@@ -40,22 +40,23 @@ class DeployService extends AbstractService
     protected $mappingService;
 
     /**
-     * @var Package[]
+     * @var Composer
      */
-    protected $packages;
+    protected $composer;
 
     /**
      * @param                $packageTypes
      * @param MappingService $mappingService
+     * @param Composer       $composer
      */
     public function __construct(
         $packageTypes,
-        MappingService $mappingService
+        MappingService $mappingService,
+        Composer $composer
     ) {
         $this->packageTypes = $packageTypes;
         $this->mappingService = $mappingService;
-
-        $this->packages = [];
+        $this->composer = $composer;
     }
 
     /**
@@ -79,31 +80,22 @@ class DeployService extends AbstractService
     }
 
     /**
-     * @return \Composer\Package\Package[]
+     * @return \Composer\Package\PackageInterface[]
      */
     public function getPackages()
     {
-        return $this->packages;
+        return $this->getComposer()
+            ->getRepositoryManager()
+            ->getLocalRepository()
+            ->getCanonicalPackages();
     }
 
     /**
-     * @param \Composer\Package\Package[] $packages
+     * @return Composer
      */
-    public function setPackages($packages)
+    public function getComposer()
     {
-        $this->packages = $packages;
-    }
-
-    /**
-     * addPackage
-     *
-     * @param Package $package
-     *
-     * @return void
-     */
-    public function addPackage(Package $package)
-    {
-        $this->packages[] = $package;
+        return $this->composer;
     }
 
     /**

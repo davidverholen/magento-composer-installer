@@ -137,6 +137,7 @@
                  parent="abstractService">
             <argument>%composer.package.types%</argument>
             <argument type="service" id="mappingService"/>
+            <argument type="service" id="composer"/>
         </service>
     </services>
 </container>
