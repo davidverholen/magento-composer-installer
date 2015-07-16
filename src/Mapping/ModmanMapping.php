@@ -91,7 +91,7 @@ class ModmanMapping extends AbstractMapping
     /**
      * getMappings
      *
-     * returns the resulting mappings as array[source] = target
+     * returns the resulting mappings as array[array[$source, $target]]
      *
      * @return array
      */
@@ -102,7 +102,7 @@ class ModmanMapping extends AbstractMapping
             $firstChar = substr(trim($line), 0, 1);
             if (!in_array($firstChar, $this->getIgnoreLinesCharacters())) {
                 $lineParts = explode(' ', trim($line));
-                $map[trim($lineParts[0])] = trim($lineParts[1]);
+                $map[] = [trim($lineParts[0]), trim($lineParts[1])];
             }
         }
 

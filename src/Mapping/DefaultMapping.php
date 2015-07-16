@@ -49,6 +49,6 @@ class DefaultMapping extends AbstractMapping
      */
     public function getMappings()
     {
-        return ['.' => '.'];
+        return [['.', '.']];
     }
 }

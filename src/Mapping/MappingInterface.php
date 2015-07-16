@@ -49,7 +49,7 @@ interface MappingInterface
     /**
      * getMappings
      *
-     * returns the resulting mappings as array[source] = target
+     * returns the resulting mappings as array[array[$source, $target]]
      *
      * @return array
      */

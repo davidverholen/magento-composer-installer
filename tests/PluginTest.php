@@ -80,7 +80,10 @@ class PluginTest extends AbstractTest
         $package->setExtra(['map' => [['test', 'test']]]);
         $mappings = $mappingService->getMappings($package);
 
-        foreach ($mappings as $source => $target) {
+        foreach ($mappings as $mapping) {
+            $source = $mapping[0];
+            $target = $mapping[1];
+
             $this->assertEquals('test', $source);
             $this->assertEquals('test', $target);
         }

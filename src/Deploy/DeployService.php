@@ -16,6 +16,7 @@ namespace DavidVerholen\Magento\Composer\Installer\Deploy;
 use Composer\Composer;
 use Composer\Package\PackageInterface;
 use DavidVerholen\Magento\Composer\Installer\App\AbstractService;
+use DavidVerholen\Magento\Composer\Installer\Deploy\Strategy\StrategyFactory;
 use DavidVerholen\Magento\Composer\Installer\Mapping\MappingService;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -51,21 +52,29 @@ class DeployService extends AbstractService
     protected $filesystem;
 
     /**
-     * @param                $packageTypes
-     * @param MappingService $mappingService
-     * @param Composer       $composer
-     * @param Filesystem     $filesystem
+     * @var StrategyFactory
+     */
+    protected $strategyFactory;
+
+    /**
+     * @param                 $packageTypes
+     * @param MappingService  $mappingService
+     * @param Composer        $composer
+     * @param Filesystem      $filesystem
+     * @param StrategyFactory $strategyFactory
      */
     public function __construct(
         $packageTypes,
         MappingService $mappingService,
         Composer $composer,
-        Filesystem $filesystem
+        Filesystem $filesystem,
+        StrategyFactory $strategyFactory
     ) {
         $this->packageTypes = $packageTypes;
         $this->mappingService = $mappingService;
         $this->composer = $composer;
         $this->filesystem = $filesystem;
+        $this->strategyFactory = $strategyFactory;
     }
 
     /**
@@ -124,42 +133,27 @@ class DeployService extends AbstractService
     {
         /** @var PackageInterface $package */
         foreach ($this->getPackages() as $package) {
-            $mappings = $this->getMappingService()->getMappings($package);
-            foreach ($mappings as $source => $target) {
-                $this->getFilesystem()->mirror(
-                    implode(
-                        DIRECTORY_SEPARATOR,
-                        [$this->getSourceDir($package), $source]
-                    ),
-                    implode(
-                        DIRECTORY_SEPARATOR,
-                        [$this->getTargetDir(), $target]
-                    )
-                );
-            }
+            $this->getStrategyFactory()->createStrategy(
+                $package,
+                'copy',
+                $this->getMappingService()->getMappings($package)
+            )->deploy();
         }
     }
 
     /**
-     * getSourceDir
-     *
-     * @param PackageInterface $package
-     *
-     * @return string
+     * @return StrategyFactory
      */
-    public function getSourceDir(PackageInterface $package)
+    public function getStrategyFactory()
     {
-        return $package->getTargetDir();
+        return $this->strategyFactory;
     }
 
     /**
-     * getTargetDir
-     *
-     * @return string
+     * @param StrategyFactory $strategyFactory
      */
-    public function getTargetDir()
+    public function setStrategyFactory($strategyFactory)
     {
-        /** @todo remove dummy release dir */
-        return 'release' . DIRECTORY_SEPARATOR . '1';
+        $this->strategyFactory = $strategyFactory;
     }
 }

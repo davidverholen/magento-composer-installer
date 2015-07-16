@@ -26,6 +26,8 @@ use Composer\Package\PackageInterface;
  */
 class ComposerMapping extends AbstractMapping
 {
+    const MAP_KEY = 'map';
+
     /**
      * isSupported
      *
@@ -37,25 +39,20 @@ class ComposerMapping extends AbstractMapping
      */
     public function isSupported(PackageInterface $package)
     {
-        return array_key_exists('map', $package->getExtra());
+        return array_key_exists(self::MAP_KEY, $package->getExtra());
     }
 
 
     /**
      * getMappings
      *
-     * returns the resulting mappings as array[source] = target
+     * returns the resulting mappings as array[array[$source, $target]]
      *
      * @return array
      */
     public function getMappings()
     {
-        $result = [];
-        foreach ($this->getComposerMap() as $mapping) {
-            $result[$mapping[0]] = $mapping[1];
-        }
-
-        return $result;
+        return $this->getComposerMap();
     }
 
     /**
@@ -65,7 +62,6 @@ class ComposerMapping extends AbstractMapping
      */
     protected function getComposerMap()
     {
-        $extra = $this->getPackage()->getExtra();
-        return $extra['map'];
+        return $this->getPackage()->getExtra()[self::MAP_KEY];
     }
 }

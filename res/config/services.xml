@@ -34,6 +34,11 @@
             <parameter key="mage">.</parameter>
         </parameter>
 
+        <parameter key="deploy.strategies" type="collection">
+            <parameter key="none">DavidVerholen\Magento\Composer\Installer\Deploy\Strategy\None</parameter>
+            <parameter key="copy">DavidVerholen\Magento\Composer\Installer\Deploy\Strategy\Copy</parameter>
+        </parameter>
+
         <parameter key="package.entity.class">DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package
         </parameter>
         <parameter key="package.serialize.format">xml</parameter>
@@ -132,6 +137,12 @@
             </call>
         </service>
 
+        <service id="strategyFactory"
+                 class="DavidVerholen\Magento\Composer\Installer\Deploy\Strategy\StrategyFactory"
+                 parent="abstractService">
+            <argument>%deploy.strategies%</argument>
+        </service>
+
         <service id="deployService"
                  class="DavidVerholen\Magento\Composer\Installer\Deploy\DeployService"
                  parent="abstractService">
@@ -139,6 +150,7 @@
             <argument type="service" id="mappingService"/>
             <argument type="service" id="composer"/>
             <argument type="service" id="filesystem"/>
+            <argument type="service" id="strategyFactory"/>
         </service>
     </services>
 </container>
