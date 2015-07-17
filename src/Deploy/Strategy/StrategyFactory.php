@@ -49,7 +49,7 @@ class StrategyFactory extends AbstractService
         Filesystem $filesystem
     ) {
         $this->deployStrategyTypes = $deployStrategyTypes;
-        $this->filesystem;
+        $this->filesystem = $filesystem;
     }
 
     /**
