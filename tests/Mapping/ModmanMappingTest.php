@@ -32,7 +32,7 @@ class ModmanMappingTest extends AbstractTest
 {
     const MODMAN = 'modman';
 
-    /** @var ModmanMapping */
+    /** @var ModmanParser */
     protected $subject;
 
     protected function setUp()

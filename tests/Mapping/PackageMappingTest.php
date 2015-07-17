@@ -38,7 +38,7 @@ class PackageMappingTest extends AbstractTest
 
     const PACKAGE_FILENAME = 'package.xml';
 
-    /** @var PackageMapping */
+    /** @var PackageParser */
     protected $subject;
 
     /**
