@@ -96,9 +96,9 @@ class PackageMapping extends AbstractMapping
     /**
      * getMappings
      *
-     * returns the resulting mappings as array[source] = target
+     * returns the resulting mappings as Collection
      *
-     * @return array
+     * @return MapCollection
      */
     public function getMappings()
     {

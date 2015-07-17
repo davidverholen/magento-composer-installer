@@ -45,7 +45,7 @@ class ResolverService extends AbstractService
      *
      * @param MappingInterface $mapping
      *
-     * @return array
+     * @return MapCollection
      */
     public function resolve(MappingInterface $mapping)
     {

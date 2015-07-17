@@ -43,12 +43,15 @@ class DefaultMapping extends AbstractMapping
     /**
      * getMappings
      *
-     * returns the resulting mappings as array[source] = target
+     * returns the resulting mappings as Collection
      *
-     * @return array
+     * @return MapCollection
      */
     public function getMappings()
     {
-        return [['.', '.']];
+        $this->getMapCollection()->reset();
+        $this->getMapCollection()->addMap(new Map('.', '.'));
+
+        return $this->getMapCollection();
     }
 }

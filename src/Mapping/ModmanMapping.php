@@ -91,22 +91,25 @@ class ModmanMapping extends AbstractMapping
     /**
      * getMappings
      *
-     * returns the resulting mappings as array[array[$source, $target]]
+     * returns the resulting mappings as Collection
      *
-     * @return array
+     * @return MapCollection
      */
     public function getMappings()
     {
-        $map = [];
+        $this->getMapCollection()->reset();
         foreach ($this->getFileLines($this->getModmanFile()) as $line) {
             $firstChar = substr(trim($line), 0, 1);
             if (!in_array($firstChar, $this->getIgnoreLinesCharacters())) {
                 $lineParts = explode(' ', trim($line));
-                $map[] = [trim($lineParts[0]), trim($lineParts[1])];
+                $this->getMapCollection()->addMap(new Map(
+                    trim($lineParts[0]),
+                    trim($lineParts[1])
+                ));
             }
         }
 
-        return $map;
+        return $this->getMapCollection();
     }
 
     /**

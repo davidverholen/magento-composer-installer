@@ -16,6 +16,7 @@ namespace DavidVerholen\Magento\Composer\Installer;
 use Composer\Config;
 use Composer\Package\Package;
 use DavidVerholen\Magento\Composer\Installer\Deploy\DeployService;
+use DavidVerholen\Magento\Composer\Installer\Mapping\Map;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
@@ -69,7 +70,7 @@ class PluginTest extends AbstractTest
         );
     }
 
-    public function testGetFilesystemFromMapping()
+    public function testComposerMapInFullApplication()
     {
         /** @var DeployService $deployService */
         $deployService = $this->subject->getServiceContainer()
@@ -80,12 +81,10 @@ class PluginTest extends AbstractTest
         $package->setExtra(['map' => [['test', 'test']]]);
         $mappings = $mappingService->getMappings($package);
 
-        foreach ($mappings as $mapping) {
-            $source = $mapping[0];
-            $target = $mapping[1];
-
-            $this->assertEquals('test', $source);
-            $this->assertEquals('test', $target);
+        /** @var Map $map */
+        foreach ($mappings as $map) {
+            $this->assertEquals('test', $map->getSource());
+            $this->assertEquals('test', $map->getTarget());
         }
     }
 

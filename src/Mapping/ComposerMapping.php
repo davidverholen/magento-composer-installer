@@ -46,13 +46,28 @@ class ComposerMapping extends AbstractMapping
     /**
      * getMappings
      *
-     * returns the resulting mappings as array[array[$source, $target]]
+     * returns the resulting mappings as Collection
      *
      * @return array
      */
     public function getMappings()
     {
-        return $this->getComposerMap();
+        $this->initMapCollection();
+        return $this->getMapCollection();
+    }
+
+    /**
+     * initMapCollection
+     *
+     * @return void
+     */
+    protected function initMapCollection()
+    {
+        $this->getMapCollection()->reset();
+        foreach ($this->getComposerMap() as $composerMap) {
+            $this->getMapCollection()
+                ->addMap(new Map($composerMap[0], $composerMap[1]));
+        }
     }
 
     /**

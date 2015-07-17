@@ -45,6 +45,11 @@ abstract class AbstractMapping implements MappingInterface
     private $finder;
 
     /**
+     * @var MapCollection
+     */
+    private $mapCollection;
+
+    /**
      * @param Filesystem $filesystem
      * @param Finder     $finder
      */
@@ -54,6 +59,8 @@ abstract class AbstractMapping implements MappingInterface
     ) {
         $this->filesystem = $filesystem;
         $this->finder = $finder;
+
+        $this->mapCollection = new MapCollection();
     }
 
     /**
@@ -132,5 +139,13 @@ abstract class AbstractMapping implements MappingInterface
         }
 
         return null;
+    }
+
+    /**
+     * @return MapCollection
+     */
+    public function getMapCollection()
+    {
+        return $this->mapCollection;
     }
 }
