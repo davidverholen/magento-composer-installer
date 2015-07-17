@@ -141,6 +141,7 @@
                  class="DavidVerholen\Magento\Composer\Installer\Deploy\Strategy\StrategyFactory"
                  parent="abstractService">
             <argument>%deploy.strategies%</argument>
+            <argument type="service" id="filesystem"/>
         </service>
 
         <service id="deployService"

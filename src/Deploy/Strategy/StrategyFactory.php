@@ -15,6 +15,7 @@ namespace DavidVerholen\Magento\Composer\Installer\Deploy\Strategy;
 
 use Composer\Package\PackageInterface;
 use DavidVerholen\Magento\Composer\Installer\App\AbstractService;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Class StrategyFactory
@@ -33,13 +34,22 @@ class StrategyFactory extends AbstractService
     protected $deployStrategyTypes = [];
 
     /**
+     * @var Filesystem
+     */
+    protected $filesystem;
+
+    /**
      * StrategyFactory constructor.
      *
-     * @param array $deployStrategyTypes
+     * @param array      $deployStrategyTypes
+     * @param Filesystem $filesystem
      */
-    public function __construct(array $deployStrategyTypes)
-    {
+    public function __construct(
+        array $deployStrategyTypes,
+        Filesystem $filesystem
+    ) {
         $this->deployStrategyTypes = $deployStrategyTypes;
+        $this->filesystem;
     }
 
     /**
@@ -81,6 +91,22 @@ class StrategyFactory extends AbstractService
     }
 
     /**
+     * @return Filesystem
+     */
+    public function getFilesystem()
+    {
+        return $this->filesystem;
+    }
+
+    /**
+     * @param Filesystem $filesystem
+     */
+    public function setFilesystem($filesystem)
+    {
+        $this->filesystem = $filesystem;
+    }
+
+    /**
      * getStrategyClass
      *
      * @param                  $strategyClassName
@@ -101,7 +127,8 @@ class StrategyFactory extends AbstractService
 
         $strategyClass = new $strategyClassName(
             $package,
-            $mappings
+            $mappings,
+            $this->getFilesystem()
         );
 
         if (false === ($strategyClass instanceof AbstractStrategy)) {

@@ -14,6 +14,7 @@
 namespace DavidVerholen\Magento\Composer\Installer\Deploy\Strategy;
 
 use Composer\Package\PackageInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Class AbstractStrategy
@@ -37,15 +38,25 @@ abstract class AbstractStrategy implements StrategyInterface
     protected $package;
 
     /**
+     * @var Filesystem
+     */
+    protected $filesystem;
+
+    /**
      * AbstractStrategy constructor.
      *
-     * @param array            $mappings
      * @param PackageInterface $package
+     * @param array            $mappings
+     * @param Filesystem       $filesystem
      */
-    public function __construct(PackageInterface $package, array $mappings)
-    {
+    public function __construct(
+        PackageInterface $package,
+        array $mappings,
+        Filesystem $filesystem
+    ) {
         $this->mappings = $mappings;
         $this->package = $package;
+        $this->filesystem = $filesystem;
     }
 
     /**
@@ -55,7 +66,7 @@ abstract class AbstractStrategy implements StrategyInterface
      */
     public function deploy()
     {
-        foreach($this->getMappings() as $mapping) {
+        foreach ($this->getMappings() as $mapping) {
             $this->createDelegate($mapping[0], $mapping[1]);
         }
     }
@@ -100,5 +111,21 @@ abstract class AbstractStrategy implements StrategyInterface
     public function setPackage($package)
     {
         $this->package = $package;
+    }
+
+    /**
+     * @return Filesystem
+     */
+    public function getFilesystem()
+    {
+        return $this->filesystem;
+    }
+
+    /**
+     * @param Filesystem $filesystem
+     */
+    public function setFilesystem($filesystem)
+    {
+        $this->filesystem = $filesystem;
     }
 }
