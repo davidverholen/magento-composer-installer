@@ -79,22 +79,22 @@
             <argument type="service" id="filesystem"/>
         </service>
 
-        <service id="abstractMapping" abstract="true">
+        <service id="abstractParser" abstract="true">
             <argument type="service" id="filesystem"/>
             <argument type="service" id="finder"/>
         </service>
 
-        <service id="defaultMapping"
-                 class="DavidVerholen\Magento\Composer\Installer\Mapping\DefaultMapping"
-                 parent="abstractMapping"/>
+        <service id="defaultParser"
+                 class="DavidVerholen\Magento\Composer\Installer\Mapping\Parser\DefaultParser"
+                 parent="abstractParser"/>
 
-        <service id="composerMapping"
-                 class="DavidVerholen\Magento\Composer\Installer\Mapping\ComposerMapping"
-                 parent="abstractMapping"/>
+        <service id="composerParser"
+                 class="DavidVerholen\Magento\Composer\Installer\Mapping\Parser\ComposerParser"
+                 parent="abstractParser"/>
 
-        <service id="modmanMapping"
-                 class="DavidVerholen\Magento\Composer\Installer\Mapping\ModmanMapping"
-                 parent="abstractMapping">
+        <service id="modmanParser"
+                 class="DavidVerholen\Magento\Composer\Installer\Mapping\Parser\ModmanParser"
+                 parent="abstractParser">
             <call method="setModmanFileName">
                 <argument>%modman.file.name%</argument>
             </call>
@@ -103,9 +103,9 @@
             </call>
         </service>
 
-        <service id="packageMapping"
-                 class="DavidVerholen\Magento\Composer\Installer\Mapping\PackageMapping"
-                 parent="abstractMapping">
+        <service id="packageParser"
+                 class="DavidVerholen\Magento\Composer\Installer\Mapping\Parser\PackageParser"
+                 parent="abstractParser">
             <argument type="service" id="serializer"/>
             <call method="setPackageTargets">
                 <argument>%magento.package.targets%</argument>
@@ -124,16 +124,16 @@
         <service id="mappingService"
                  class="DavidVerholen\Magento\Composer\Installer\Mapping\MappingService"
                  parent="abstractService">
-            <argument type="service" id="defaultMapping"/>
+            <argument type="service" id="defaultParser"/>
             <argument type="service" id="resolverService"/>
-            <call method="addMapping">
-                <argument type="service" id="composerMapping"/>
+            <call method="addParser">
+                <argument type="service" id="composerParser"/>
             </call>
-            <call method="addMapping">
-                <argument type="service" id="modmanMapping"/>
+            <call method="addParser">
+                <argument type="service" id="modmanParser"/>
             </call>
-            <call method="addMapping">
-                <argument type="service" id="packageMapping"/>
+            <call method="addParser">
+                <argument type="service" id="packageParser"/>
             </call>
         </service>
 

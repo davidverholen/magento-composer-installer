@@ -11,9 +11,10 @@
  * @link     http://github.com/davidverholen
  */
 
-namespace DavidVerholen\Magento\Composer\Installer\Mapping;
+namespace DavidVerholen\Magento\Composer\Installer\Mapping\Parser;
 
 use Composer\Package\PackageInterface;
+use DavidVerholen\Magento\Composer\Installer\Mapping\MapCollection;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -27,7 +28,7 @@ use Symfony\Component\Finder\SplFileInfo;
  * @license  http://opensource.org/licenses/OSL-3.0 OSL-3.0
  * @link     http://github.com/davidverholen
  */
-abstract class AbstractMapping implements MappingInterface
+abstract class AbstractParser implements ParserInterface
 {
     /**
      * @var PackageInterface

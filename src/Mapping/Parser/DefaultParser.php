@@ -1,6 +1,6 @@
 <?php
- /**
- * MappingInterface.php
+/**
+ * DefaultMapping.php
  *
  * PHP Version 5
  *
@@ -11,20 +11,22 @@
  * @link     http://github.com/davidverholen
  */
 
-namespace DavidVerholen\Magento\Composer\Installer\Mapping;
+namespace DavidVerholen\Magento\Composer\Installer\Mapping\Parser;
 
 use Composer\Package\PackageInterface;
+use DavidVerholen\Magento\Composer\Installer\Mapping\Map;
+use DavidVerholen\Magento\Composer\Installer\Mapping\MapCollection;
 
 /**
- * Interface MappingInterface
+ * Class DefaultMapping
  *
- * @category ${PROJECT_NAME}
+ * @category DavidVerholen_MagentoComposerInstaller
  * @package  DavidVerholen\Magento\Composer\Installer\Mapping
  * @author   David Verholen <david@verholen.com>
  * @license  http://opensource.org/licenses/OSL-3.0 OSL-3.0
  * @link     http://github.com/davidverholen
  */
-interface MappingInterface
+class DefaultParser extends AbstractParser
 {
     /**
      * isSupported
@@ -35,16 +37,10 @@ interface MappingInterface
      *
      * @return boolean
      */
-    public function isSupported(PackageInterface $package);
-
-    /**
-     * setPackage
-     *
-     * @param PackageInterface $package
-     *
-     * @return $this
-     */
-    public function setPackage(PackageInterface $package);
+    public function isSupported(PackageInterface $package)
+    {
+        return true;
+    }
 
     /**
      * getMappings
@@ -53,5 +49,11 @@ interface MappingInterface
      *
      * @return MapCollection
      */
-    public function getMappings();
+    public function getMappings()
+    {
+        $this->getMapCollection()->reset();
+        $this->getMapCollection()->addMap(new Map('.', '.'));
+
+        return $this->getMapCollection();
+    }
 }

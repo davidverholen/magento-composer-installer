@@ -11,9 +11,10 @@
  * @link     http://github.com/davidverholen
  */
 
-namespace DavidVerholen\Magento\Composer\Installer\Mapping;
+namespace DavidVerholen\Magento\Composer\Installer\Mapping\Parser;
 
 use Composer\Package\PackageInterface;
+use DavidVerholen\Magento\Composer\Installer\Mapping\Map;
 
 /**
  * Class ComposerMapping
@@ -24,7 +25,7 @@ use Composer\Package\PackageInterface;
  * @license  http://opensource.org/licenses/OSL-3.0 OSL-3.0
  * @link     http://github.com/davidverholen
  */
-class ComposerMapping extends AbstractMapping
+class ComposerParser extends AbstractParser
 {
     const MAP_KEY = 'map';
 

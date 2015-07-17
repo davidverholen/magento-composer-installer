@@ -14,6 +14,7 @@
 namespace DavidVerholen\Magento\Composer\Installer\Mapping;
 
 use DavidVerholen\Magento\Composer\Installer\AbstractTest;
+use DavidVerholen\Magento\Composer\Installer\Mapping\Parser\ModmanParser;
 use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -38,7 +39,7 @@ class ModmanMappingTest extends AbstractTest
     {
         parent::setUp();
 
-        $this->subject = new ModmanMapping(
+        $this->subject = new ModmanParser(
             new Filesystem(),
             new Finder()
         );

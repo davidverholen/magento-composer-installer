@@ -16,6 +16,7 @@ namespace DavidVerholen\Magento\Composer\Installer\Mapping;
 use DavidVerholen\Magento\Composer\Installer\AbstractTest;
 use DavidVerholen\Magento\Composer\Installer\App\SerializerFactory;
 use DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package;
+use DavidVerholen\Magento\Composer\Installer\Mapping\Parser\PackageParser;
 use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -65,7 +66,7 @@ class PackageMappingTest extends AbstractTest
     {
         parent::setUp();
 
-        $this->subject = new PackageMapping(
+        $this->subject = new PackageParser(
             new Filesystem(),
             new Finder(),
             SerializerFactory::createSerializer()

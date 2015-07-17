@@ -14,6 +14,7 @@
 namespace DavidVerholen\Magento\Composer\Installer\Mapping;
 
 use DavidVerholen\Magento\Composer\Installer\App\AbstractService;
+use DavidVerholen\Magento\Composer\Installer\Mapping\Parser\ParserInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -43,13 +44,13 @@ class ResolverService extends AbstractService
     /**
      * resolve
      *
-     * @param MappingInterface $mapping
+     * @param ParserInterface $parser
      *
      * @return MapCollection
      */
-    public function resolve(MappingInterface $mapping)
+    public function resolve(ParserInterface $parser)
     {
         /** @todo resolve mappings to file paths */
-        return $mapping->getMappings();
+        return $parser->getMappings();
     }
 }

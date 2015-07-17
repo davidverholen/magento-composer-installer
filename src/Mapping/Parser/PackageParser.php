@@ -11,10 +11,11 @@
  * @link     http://github.com/davidverholen
  */
 
-namespace DavidVerholen\Magento\Composer\Installer\Mapping;
+namespace DavidVerholen\Magento\Composer\Installer\Mapping\Parser;
 
 use Composer\Package\PackageInterface;
 use DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package\Target;
+use DavidVerholen\Magento\Composer\Installer\Mapping\MapCollection;
 use JMS\Serializer\Serializer;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -29,7 +30,7 @@ use Symfony\Component\Finder\SplFileInfo;
  * @license  http://opensource.org/licenses/OSL-3.0 OSL-3.0
  * @link     http://github.com/davidverholen
  */
-class PackageMapping extends AbstractMapping
+class PackageParser extends AbstractParser
 {
     /**
      * @var Serializer

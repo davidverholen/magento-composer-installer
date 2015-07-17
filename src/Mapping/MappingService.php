@@ -15,6 +15,7 @@ namespace DavidVerholen\Magento\Composer\Installer\Mapping;
 
 use Composer\Package\PackageInterface;
 use DavidVerholen\Magento\Composer\Installer\App\AbstractService;
+use DavidVerholen\Magento\Composer\Installer\Mapping\Parser\ParserInterface;
 
 /**
  * Class MappingFactory
@@ -28,14 +29,14 @@ use DavidVerholen\Magento\Composer\Installer\App\AbstractService;
 class MappingService extends AbstractService
 {
     /**
-     * @var MappingInterface[]
+     * @var ParserInterface[]
      */
     protected $mappings;
 
     /**
-     * @var MappingInterface
+     * @var ParserInterface
      */
-    protected $defaultMapping;
+    protected $defaultParser;
 
     /**
      * @var ResolverService
@@ -43,14 +44,14 @@ class MappingService extends AbstractService
     protected $resolverService;
 
     /**
-     * @param MappingInterface $defaultMapping
-     * @param ResolverService  $resolverService
+     * @param ParserInterface $defaultParser
+     * @param ResolverService $resolverService
      */
     public function __construct(
-        MappingInterface $defaultMapping,
+        ParserInterface $defaultParser,
         ResolverService $resolverService
     ) {
-        $this->defaultMapping = $defaultMapping;
+        $this->defaultParser = $defaultParser;
         $this->resolverService = $resolverService;
         $this->mappings = array();
     }
@@ -72,7 +73,7 @@ class MappingService extends AbstractService
      *
      * @param PackageInterface $package
      *
-     * @return MappingInterface
+     * @return ParserInterface
      */
     protected function createMapping(PackageInterface $package)
     {
@@ -82,7 +83,7 @@ class MappingService extends AbstractService
             }
         }
 
-        return $this->defaultMapping->setPackage($package);
+        return $this->defaultParser->setPackage($package);
     }
 
     /**
@@ -98,12 +99,12 @@ class MappingService extends AbstractService
     /**
      * addMapping
      *
-     * @param MappingInterface $mapping
+     * @param ParserInterface $parser
      *
      * @return void
      */
-    public function addMapping(MappingInterface $mapping)
+    public function addParser(ParserInterface $parser)
     {
-        $this->mappings[] = $mapping;
+        $this->mappings[] = $parser;
     }
 }
