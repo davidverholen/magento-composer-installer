@@ -34,7 +34,7 @@ class DeployService extends AbstractService
     /**
      * @var array
      */
-    protected $packageTypes = array();
+    protected $packageTypes = [];
 
     /**
      * @var MappingService

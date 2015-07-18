@@ -53,7 +53,7 @@ class MappingService extends AbstractService
     ) {
         $this->defaultParser = $defaultParser;
         $this->resolverService = $resolverService;
-        $this->mappings = array();
+        $this->mappings = [];
     }
 
     /**
