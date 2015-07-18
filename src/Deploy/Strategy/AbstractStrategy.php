@@ -14,6 +14,7 @@
 namespace DavidVerholen\Magento\Composer\Installer\Deploy\Strategy;
 
 use Composer\Package\PackageInterface;
+use DavidVerholen\Magento\Composer\Installer\App\FileNotFoundException;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -30,17 +31,22 @@ abstract class AbstractStrategy implements StrategyInterface
     /**
      * @var array
      */
-    protected $mappings;
+    private $mappings;
 
     /**
      * @var PackageInterface
      */
-    protected $package;
+    private $package;
 
     /**
      * @var Filesystem
      */
-    protected $filesystem;
+    private $filesystem;
+
+    /**
+     * @var array
+     */
+    private $errors;
 
     /**
      * AbstractStrategy constructor.
@@ -57,6 +63,8 @@ abstract class AbstractStrategy implements StrategyInterface
         $this->mappings = $mappings;
         $this->package = $package;
         $this->filesystem = $filesystem;
+
+        $this->errors = [];
     }
 
     /**
@@ -80,6 +88,21 @@ abstract class AbstractStrategy implements StrategyInterface
      * @return mixed
      */
     abstract protected function createDelegate($source, $target);
+
+    /**
+     * validateSource
+     *
+     * @param $path
+     *
+     * @return void
+     * @throws FileNotFoundException
+     */
+    protected function validateFile($path)
+    {
+        if (false === $this->getFilesystem()->exists($path)) {
+            throw new FileNotFoundException($path);
+        }
+    }
 
     /**
      * @return array
@@ -127,5 +150,27 @@ abstract class AbstractStrategy implements StrategyInterface
     public function setFilesystem($filesystem)
     {
         $this->filesystem = $filesystem;
+    }
+
+    /**
+     * addError
+     *
+     * @param $message
+     *
+     * @return void
+     */
+    protected function addError($message)
+    {
+        $this->errors[] = $message;
+    }
+
+    /**
+     * getErrors
+     *
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
     }
 }

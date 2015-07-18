@@ -13,6 +13,8 @@
 
 namespace DavidVerholen\Magento\Composer\Installer\Deploy\Strategy;
 
+use Exception;
+
 /**
  * Class Copy
  *
@@ -31,10 +33,25 @@ class Copy extends AbstractStrategy
      * @param $source
      * @param $target
      *
-     * @return mixed
+     * @return boolean
      */
     protected function createDelegate($source, $target)
     {
-        // TODO: Implement createDelegate() method.
+        try {
+            $this->validateFile($source);
+
+            if (is_file($source)) {
+                $this->getFilesystem()->copy($source, $target);
+            } elseif (is_dir($source)) {
+                $this->getFilesystem()->mirror($source, $target);
+            }
+
+            $this->validateFile($target);
+        } catch (Exception $e) {
+            $this->addError($e->getMessage());
+            return false;
+        }
+
+        return true;
     }
 }
