@@ -101,7 +101,7 @@ abstract class AbstractStrategy implements StrategyInterface
     /**
      * validateSource
      *
-     * @param $path
+     * @param string $path
      *
      * @return void
      * @throws FileNotFoundException
@@ -164,7 +164,7 @@ abstract class AbstractStrategy implements StrategyInterface
     /**
      * addError
      *
-     * @param $message
+     * @param string $message
      *
      * @return void
      */
