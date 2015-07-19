@@ -15,6 +15,8 @@ namespace DavidVerholen\Magento\Composer\Installer\Deploy\Strategy;
 
 use Composer\Package\PackageInterface;
 use DavidVerholen\Magento\Composer\Installer\App\FileNotFoundException;
+use DavidVerholen\Magento\Composer\Installer\Mapping\Map;
+use DavidVerholen\Magento\Composer\Installer\Mapping\MapCollection;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -29,7 +31,7 @@ use Symfony\Component\Filesystem\Filesystem;
 abstract class AbstractStrategy implements StrategyInterface
 {
     /**
-     * @var array
+     * @var MapCollection
      */
     private $mappings;
 
@@ -74,20 +76,20 @@ abstract class AbstractStrategy implements StrategyInterface
      */
     public function deploy()
     {
-        foreach ($this->getMappings() as $mapping) {
-            $this->createDelegate($mapping[0], $mapping[1]);
+        /** @var Map $map */
+        foreach ($this->getMappings() as $map) {
+            $this->createDelegate($map);
         }
     }
 
     /**
      * createDelegate
      *
-     * @param $source
-     * @param $target
+     * @param Map $map
      *
-     * @return mixed
+     * @return boolean
      */
-    abstract protected function createDelegate($source, $target);
+    abstract protected function createDelegate(Map $map);
 
     /**
      * validateSource
@@ -105,7 +107,7 @@ abstract class AbstractStrategy implements StrategyInterface
     }
 
     /**
-     * @return array
+     * @return MapCollection
      */
     public function getMappings()
     {
@@ -113,7 +115,7 @@ abstract class AbstractStrategy implements StrategyInterface
     }
 
     /**
-     * @param array $mappings
+     * @param MapCollection $mappings
      */
     public function setMappings($mappings)
     {

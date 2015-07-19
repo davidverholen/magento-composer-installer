@@ -13,6 +13,8 @@
 
 namespace DavidVerholen\Magento\Composer\Installer\Deploy\Strategy;
 
+use DavidVerholen\Magento\Composer\Installer\Mapping\Map;
+
 /**
  * Class None
  *
@@ -28,13 +30,13 @@ class None extends AbstractStrategy
     /**
      * createDelegate
      *
-     * @param $source
-     * @param $target
+     * @param Map $map
      *
-     * @return mixed
+     * @return boolean
+     *
      */
-    protected function createDelegate($source, $target)
+    protected function createDelegate(Map $map)
     {
-        // TODO: Implement createDelegate() method.
+        return true;
     }
 }
