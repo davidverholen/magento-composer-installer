@@ -14,7 +14,6 @@
 namespace DavidVerholen\Magento\Composer\Installer\Deploy\Strategy;
 
 use DavidVerholen\Magento\Composer\Installer\Mapping\Map;
-use Exception;
 
 /**
  * Class Copy
@@ -33,31 +32,20 @@ class Copy extends AbstractStrategy
      *
      * @param Map $map
      *
-     * @return bool
+     * @return void
      */
     protected function createDelegate(Map $map)
     {
-        try {
-            $this->validateFile($map->getSource());
-
-            if (is_file($map->getSource())) {
-                $this->getFilesystem()->copy(
-                    $map->getSource(),
-                    $map->getTarget()
-                );
-            } elseif (is_dir($map->getSource())) {
-                $this->getFilesystem()->mirror(
-                    $map->getSource(),
-                    $map->getTarget()
-                );
-            }
-
-            $this->validateFile($map->getTarget());
-        } catch (Exception $e) {
-            $this->addError($e->getMessage());
-            return false;
+        if (is_file($map->getSource())) {
+            $this->getFilesystem()->copy(
+                $map->getSource(),
+                $map->getTarget()
+            );
+        } elseif (is_dir($map->getSource())) {
+            $this->getFilesystem()->mirror(
+                $map->getSource(),
+                $map->getTarget()
+            );
         }
-
-        return true;
     }
 }

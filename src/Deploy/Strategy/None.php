@@ -32,11 +32,10 @@ class None extends AbstractStrategy
      *
      * @param Map $map
      *
-     * @return boolean
+     * @return void
      *
      */
     protected function createDelegate(Map $map)
     {
-        return true;
     }
 }

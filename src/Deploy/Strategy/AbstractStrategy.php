@@ -17,6 +17,7 @@ use Composer\Package\PackageInterface;
 use DavidVerholen\Magento\Composer\Installer\App\FileNotFoundException;
 use DavidVerholen\Magento\Composer\Installer\Mapping\Map;
 use DavidVerholen\Magento\Composer\Installer\Mapping\MapCollection;
+use Exception;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -78,7 +79,13 @@ abstract class AbstractStrategy implements StrategyInterface
     {
         /** @var Map $map */
         foreach ($this->getMappings() as $map) {
-            $this->createDelegate($map);
+            try {
+                $this->validateFile($map->getSource());
+                $this->createDelegate($map);
+                $this->validateFile($map->getTarget());
+            } catch (Exception $e) {
+                $this->addError($e->getMessage());
+            }
         }
     }
 
@@ -87,7 +94,7 @@ abstract class AbstractStrategy implements StrategyInterface
      *
      * @param Map $map
      *
-     * @return boolean
+     * @return void
      */
     abstract protected function createDelegate(Map $map);
 
