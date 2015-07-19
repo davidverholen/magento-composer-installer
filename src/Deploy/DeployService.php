@@ -133,12 +133,46 @@ class DeployService extends AbstractService
     {
         /** @var PackageInterface $package */
         foreach ($this->getPackages() as $package) {
-            $this->getStrategyFactory()->createStrategy(
-                $package,
-                'copy',
-                $this->getMappingService()->getMappings($package)
-            )->deploy();
+            if (false === $this->supports($package)) {
+                continue;
+            }
+
+            $this->deployPackage($package);
         }
+    }
+
+    /**
+     * deployPackage
+     *
+     * @param PackageInterface $package
+     *
+     * @return void
+     */
+    public function deployPackage(PackageInterface $package)
+    {
+        $strategy = $this->getStrategyFactory()->createStrategy(
+            $package,
+            'copy',
+            $this->getMappingService()->getMappings($package)
+        );
+
+        $strategy->deploy();
+
+        if ($strategy->hasErrors()) {
+            $this->getLogger()->log($strategy->getErrors(), false, 'error');
+        }
+    }
+
+    /**
+     * supports
+     *
+     * @param PackageInterface $package
+     *
+     * @return bool
+     */
+    public function supports(PackageInterface $package)
+    {
+        return in_array($package->getType(), $this->getPackageTypes());
     }
 
     /**

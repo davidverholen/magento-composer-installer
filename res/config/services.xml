@@ -39,8 +39,7 @@
             <parameter key="copy">DavidVerholen\Magento\Composer\Installer\Deploy\Strategy\Copy</parameter>
         </parameter>
 
-        <parameter key="package.entity.class">DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package
-        </parameter>
+        <parameter key="package.entity.class">DavidVerholen\Magento\Composer\Installer\Entity\Serializable\Package</parameter>
         <parameter key="package.serialize.format">xml</parameter>
     </parameters>
 

@@ -173,4 +173,14 @@ abstract class AbstractStrategy implements StrategyInterface
     {
         return $this->errors;
     }
+
+    /**
+     * hasErrors
+     *
+     * @return bool
+     */
+    public function hasErrors()
+    {
+        return count($this->errors) > 0;
+    }
 }

@@ -21,4 +21,18 @@ interface StrategyInterface
      * @return void
      */
     public function deploy();
+
+    /**
+     * hasErrors
+     *
+     * @return boolean
+     */
+    public function hasErrors();
+
+    /**
+     * getErrors
+     *
+     * @return array
+     */
+    public function getErrors();
 }
