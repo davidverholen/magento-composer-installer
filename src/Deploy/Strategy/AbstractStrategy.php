@@ -55,15 +55,15 @@ abstract class AbstractStrategy implements StrategyInterface
      * AbstractStrategy constructor.
      *
      * @param PackageInterface $package
-     * @param array            $mappings
+     * @param MapCollection    $mapCollection
      * @param Filesystem       $filesystem
      */
     public function __construct(
         PackageInterface $package,
-        array $mappings,
+        MapCollection $mapCollection,
         Filesystem $filesystem
     ) {
-        $this->mappings = $mappings;
+        $this->mappings = $mapCollection;
         $this->package = $package;
         $this->filesystem = $filesystem;
 
@@ -78,7 +78,7 @@ abstract class AbstractStrategy implements StrategyInterface
     public function deploy()
     {
         /** @var Map $map */
-        foreach ($this->getMappings() as $map) {
+        foreach ($this->getMapCollection() as $map) {
             try {
                 $this->validateFile($map->getSource());
                 $this->createDelegate($map);
@@ -116,7 +116,7 @@ abstract class AbstractStrategy implements StrategyInterface
     /**
      * @return MapCollection
      */
-    public function getMappings()
+    public function getMapCollection()
     {
         return $this->mappings;
     }
@@ -124,7 +124,7 @@ abstract class AbstractStrategy implements StrategyInterface
     /**
      * @param MapCollection $mappings
      */
-    public function setMappings($mappings)
+    public function setMapCollection($mappings)
     {
         $this->mappings = $mappings;
     }

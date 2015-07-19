@@ -15,6 +15,7 @@ namespace DavidVerholen\Magento\Composer\Installer\Deploy\Strategy;
 
 use Composer\Package\PackageInterface;
 use DavidVerholen\Magento\Composer\Installer\App\AbstractService;
+use DavidVerholen\Magento\Composer\Installer\Mapping\MapCollection;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -57,7 +58,7 @@ class StrategyFactory extends AbstractService
      *
      * @param PackageInterface $package
      * @param                  $type
-     * @param                  $mappings
+     * @param MapCollection    $mapCollection
      *
      * @return StrategyInterface
      * @throws InvalidDeployStrategyException
@@ -65,12 +66,12 @@ class StrategyFactory extends AbstractService
     public function createStrategy(
         PackageInterface $package,
         $type,
-        $mappings
+        MapCollection $mapCollection
     ) {
         return $this->getStrategyClass(
             $this->getDeployStrategyTypes()[$type],
             $package,
-            $mappings
+            $mapCollection
         );
     }
 
@@ -111,7 +112,7 @@ class StrategyFactory extends AbstractService
      *
      * @param                  $strategyClassName
      * @param PackageInterface $package
-     * @param                  $mappings
+     * @param MapCollection    $mapCollection
      *
      * @return StrategyInterface
      * @throws InvalidDeployStrategyException
@@ -119,7 +120,7 @@ class StrategyFactory extends AbstractService
     protected function getStrategyClass(
         $strategyClassName,
         PackageInterface $package,
-        $mappings
+        MapCollection $mapCollection
     ) {
         if (false === class_exists($strategyClassName)) {
             throw new InvalidDeployStrategyException($strategyClassName);
@@ -127,7 +128,7 @@ class StrategyFactory extends AbstractService
 
         $strategyClass = new $strategyClassName(
             $package,
-            $mappings,
+            $mapCollection,
             $this->getFilesystem()
         );
 
