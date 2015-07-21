@@ -61,7 +61,7 @@ class MappingService extends AbstractService
      *
      * @param PackageInterface $package
      *
-     * @return array
+     * @return MapCollection
      */
     public function getMappings(PackageInterface $package)
     {
