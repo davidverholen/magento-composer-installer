@@ -64,14 +64,15 @@ class PackageParser extends AbstractParser
 
     /**
      * @param Filesystem $filesystem
-     * @param Finder     $finder
+     * @param Finder $finder
      * @param Serializer $serializer
      */
     public function __construct(
         Filesystem $filesystem,
         Finder $finder,
         Serializer $serializer
-    ) {
+    )
+    {
         parent::__construct(
             $filesystem,
             $finder
@@ -104,10 +105,9 @@ class PackageParser extends AbstractParser
     public function getMappings()
     {
         /** @var Target $target */
-        foreach($this->getPackageEntity()->getContents() as $target) {
-
+        foreach ($this->getPackageEntity()->getContents() as $target) {
+            // TODO: Implement getMappings() method.
         }
-        // TODO: Implement getMappings() method.
     }
 
     /**
