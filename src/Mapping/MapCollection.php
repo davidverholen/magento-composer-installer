@@ -34,11 +34,17 @@ class MapCollection implements \Iterator
      */
     protected $mapArray;
 
+    /**
+     * construct
+     */
     public function __construct()
     {
         $this->position = 0;
     }
 
+    /**
+     * @param Map $map
+     */
     public function addMap(Map $map)
     {
         $this->mapArray[] = $map;
@@ -90,7 +96,7 @@ class MapCollection implements \Iterator
      */
     public function valid()
     {
-       return isset($this->mapArray[$this->position]);
+        return isset($this->mapArray[$this->position]);
     }
 
     /**
