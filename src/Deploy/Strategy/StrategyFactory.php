@@ -129,7 +129,8 @@ class StrategyFactory extends AbstractService
         $strategyClass = new $strategyClassName(
             $package,
             $mapCollection,
-            $this->getFilesystem()
+            $this->getFilesystem(),
+            $this->getConfig()
         );
 
         if (false === ($strategyClass instanceof AbstractStrategy)) {

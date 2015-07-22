@@ -33,11 +33,20 @@ abstract class AbstractService
     private $logger;
 
     /**
-     * @param LoggerService $logger
+     * @var ConfigService
      */
-    public function setLogger($logger)
-    {
+    private $config;
+
+    /**
+     * @param LoggerService $logger
+     * @param ConfigService $config
+     */
+    public function setLogger(
+        LoggerService $logger,
+        ConfigService $config
+    ) {
         $this->logger = $logger;
+        $this->config = $config;
     }
 
     /**
@@ -45,8 +54,16 @@ abstract class AbstractService
      *
      * @return LoggerService
      */
-    public function getLogger()
+    protected function getLogger()
     {
         return $this->logger;
+    }
+
+    /**
+     * @return ConfigService
+     */
+    protected function getConfig()
+    {
+        return $this->config;
     }
 }

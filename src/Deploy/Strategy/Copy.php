@@ -38,13 +38,13 @@ class Copy extends AbstractStrategy
     {
         if (is_file($map->getSource())) {
             $this->getFilesystem()->copy(
-                $map->getSource(),
-                $map->getTarget()
+                $this->getFullSourcePath($map->getSource()),
+                $this->getFullTargetPath($map->getTarget())
             );
         } elseif (is_dir($map->getSource())) {
             $this->getFilesystem()->mirror(
-                $map->getSource(),
-                $map->getTarget()
+                $this->getFullSourcePath($map->getSource()),
+                $this->getFullTargetPath($map->getTarget())
             );
         }
     }

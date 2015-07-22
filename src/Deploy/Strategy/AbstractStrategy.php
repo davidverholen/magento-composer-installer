@@ -14,6 +14,7 @@
 namespace DavidVerholen\Magento\Composer\Installer\Deploy\Strategy;
 
 use Composer\Package\PackageInterface;
+use DavidVerholen\Magento\Composer\Installer\App\ConfigService;
 use DavidVerholen\Magento\Composer\Installer\App\FileNotFoundException;
 use DavidVerholen\Magento\Composer\Installer\Mapping\Map;
 use DavidVerholen\Magento\Composer\Installer\Mapping\MapCollection;
@@ -47,6 +48,11 @@ abstract class AbstractStrategy implements StrategyInterface
     private $filesystem;
 
     /**
+     * @var ConfigService
+     */
+    private $config;
+
+    /**
      * @var array
      */
     private $errors;
@@ -57,15 +63,18 @@ abstract class AbstractStrategy implements StrategyInterface
      * @param PackageInterface $package
      * @param MapCollection    $mapCollection
      * @param Filesystem       $filesystem
+     * @param ConfigService    $config
      */
     public function __construct(
         PackageInterface $package,
         MapCollection $mapCollection,
-        Filesystem $filesystem
+        Filesystem $filesystem,
+        ConfigService $config
     ) {
         $this->mappings = $mapCollection;
         $this->package = $package;
         $this->filesystem = $filesystem;
+        $this->config = $config;
 
         $this->errors = [];
     }
@@ -114,6 +123,66 @@ abstract class AbstractStrategy implements StrategyInterface
     }
 
     /**
+     * getSourceBasePath
+     *
+     * @return string
+     */
+    protected function getSourceBasePath()
+    {
+        return realpath($this->getPackage()->getTargetDir());
+    }
+
+    /**
+     * getTargetBasePath
+     *
+     * @return string
+     */
+    protected function getTargetBasePath()
+    {
+        return realpath($this->getConfig()->getReleaseDir());
+    }
+
+    /**
+     * getFullSourcePath
+     *
+     * @param $relativeSource
+     *
+     * @return string
+     */
+    protected function getFullSourcePath($relativeSource)
+    {
+        return $this->joinPath($this->getSourceBasePath(), $relativeSource);
+    }
+
+    /**
+     * getFullTargetPath
+     *
+     * @param $relativeTarget
+     *
+     * @return string
+     */
+    protected function getFullTargetPath($relativeTarget)
+    {
+        return $this->joinPath($this->getTargetBasePath(), $relativeTarget);
+    }
+
+    /**
+     * joinPath
+     *
+     * @param $base
+     * @param $relativePath
+     *
+     * @return string
+     */
+    protected function joinPath($base, $relativePath)
+    {
+        return implode(
+            DIRECTORY_SEPARATOR,
+            [$base, $relativePath]
+        );
+    }
+
+    /**
      * @return MapCollection
      */
     public function getMapCollection()
@@ -159,6 +228,14 @@ abstract class AbstractStrategy implements StrategyInterface
     public function setFilesystem($filesystem)
     {
         $this->filesystem = $filesystem;
+    }
+
+    /**
+     * @return ConfigService
+     */
+    public function getConfig()
+    {
+        return $this->config;
     }
 
     /**
