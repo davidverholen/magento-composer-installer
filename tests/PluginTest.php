@@ -15,6 +15,7 @@ namespace DavidVerholen\Magento\Composer\Installer;
 
 use Composer\Config;
 use Composer\Package\Package;
+use DavidVerholen\Magento\Composer\Installer\App\Di\ContainerFactory;
 use DavidVerholen\Magento\Composer\Installer\Deploy\DeployService;
 use DavidVerholen\Magento\Composer\Installer\Mapping\Map;
 use Symfony\Component\DependencyInjection\Container;
@@ -36,8 +37,8 @@ class PluginTest extends AbstractTest
     protected function setUp()
     {
         $this->subject = new Plugin();
-        $this->subject->setServiceConfigDir($this->getTestServiceConfigDir());
         $this->subject->activate($this->getComposer(), $this->getIo());
+        ContainerFactory::getInstance()->setServiceConfigDir($this->getTestServiceConfigDir());
 
         parent::setUp();
     }

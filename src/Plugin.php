@@ -14,20 +14,15 @@
 
 namespace DavidVerholen\Magento\Composer\Installer;
 
-use DavidVerholen\Magento\Composer\Installer\App\LoggerFactory;
-use DavidVerholen\Magento\Composer\Installer\App\SerializerFactory;
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
+use DavidVerholen\Magento\Composer\Installer\App\Di\ContainerFactory;
 use DavidVerholen\Magento\Composer\Installer\Deploy\DeployService;
-use JMS\Serializer\Serializer;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 /**
  * Class Plugin
@@ -48,20 +43,11 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     const APP_CONFIG_DIR = 'config';
     const APP_SERVICE_MAIN_CONFIG = 'services.xml';
 
-    /**
-     * @var string
-     */
-    protected $serviceConfigDir;
 
     /**
      * @var DeployService
      */
     protected $deployService;
-
-    /**
-     * @var Serializer
-     */
-    protected $serializer;
 
     /**
      * @var Container
@@ -107,30 +93,15 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      */
     public function activate(Composer $composer, IOInterface $io)
     {
-        $this->initServiceContainer($composer, $io);
-    }
-
-    /**
-     * initServiceContainer
-     *
-     * @param Composer    $composer
-     *
-     * @param IOInterface $io
-     */
-    private function initServiceContainer(Composer $composer, IOInterface $io)
-    {
-        $this->container = new ContainerBuilder();
-        $loader = new XmlFileLoader(
-            $this->container,
-            new FileLocator($this->getServiceConfigDir($composer))
+        ContainerFactory::init(
+            static::APP_NAMESPACE,
+            static::APP_NAME,
+            static::APP_RES_DIR,
+            static::APP_CONFIG_DIR,
+            static::APP_SERVICE_MAIN_CONFIG,
+            $composer,
+            $io
         );
-        $loader->load(self::APP_SERVICE_MAIN_CONFIG);
-
-        $this->container->set('composer', $composer);
-        $this->container->set('io', $io);
-        $this->container->set('plugin', $this);
-
-        $this->container->compile();
     }
 
     /**
@@ -140,62 +111,13 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      */
     public function getServiceContainer()
     {
+        if (null === $this->container) {
+            $this->container = ContainerFactory::getInstance()->build();
+        }
+
         return $this->container;
     }
 
-    /**
-     * getApplicationDir
-     *
-     * @param Composer    $composer
-     *
-     * @return string
-     */
-    public function getApplicationDir(Composer $composer)
-    {
-        return implode(
-            DIRECTORY_SEPARATOR,
-            [
-                realpath($composer->getConfig()->get('vendor-dir')),
-                self::APP_NAMESPACE,
-                self::APP_NAME
-            ]
-        );
-    }
-
-    /**
-     * setServiceConfigDir
-     *
-     * @param string $serviceConfigDir
-     *
-     * @return void
-     */
-    public function setServiceConfigDir($serviceConfigDir)
-    {
-        $this->serviceConfigDir = $serviceConfigDir;
-    }
-
-    /**
-     * getServiceConfigFilePath
-     *
-     * @param Composer    $composer
-     *
-     * @return string
-     */
-    public function getServiceConfigDir(Composer $composer)
-    {
-        if (null === $this->serviceConfigDir) {
-            $this->serviceConfigDir = implode(
-                DIRECTORY_SEPARATOR,
-                [
-                    $this->getApplicationDir($composer),
-                    self::APP_RES_DIR,
-                    self::APP_CONFIG_DIR
-                ]
-            );
-        }
-
-        return $this->serviceConfigDir;
-    }
 
     /**
      * getDeployService
