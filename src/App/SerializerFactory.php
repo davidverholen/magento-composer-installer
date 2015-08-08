@@ -14,6 +14,7 @@
 namespace DavidVerholen\Magento\Composer\Installer\App;
 
 use Composer\Composer;
+use DavidVerholen\Magento\Composer\Installer\App\Di\ContainerFactory;
 use DavidVerholen\Magento\Composer\Installer\Plugin;
 use JMS\Serializer\SerializerBuilder;
 
@@ -53,7 +54,7 @@ class SerializerFactory
      */
     public static function createSerializer()
     {
-        if (null === self::getMetadataDir(self::getComposer())) {
+        if (null === self::getMetadataDir()) {
             throw new \Exception('No Metadatadir set for Serializer Factory');
         }
 
@@ -65,19 +66,16 @@ class SerializerFactory
     /**
      * setMetadataDir
      *
-     * @param Composer $composer
-     *
-     * @internal param $metaDataDir
-     *
      * @return string
+     *
      */
-    public static function getMetadataDir(Composer $composer)
+    public static function getMetadataDir()
     {
         if (null === self::$metaDataDir) {
             self::$metaDataDir = implode(
                 DIRECTORY_SEPARATOR,
                 [
-                    self::$plugin->getServiceConfigDir($composer),
+                    ContainerFactory::getInstance()->getServiceConfigDir(),
                     self::APP_SERIALIZER_CONFIG_DIR
                 ]
             );

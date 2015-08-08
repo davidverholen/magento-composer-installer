@@ -128,8 +128,8 @@ class ContainerFactory
         Composer $composer,
         IOInterface $io
     ) {
-        if (null === static::$instance) {
-            static::$instance = new static(
+        if (null === self::$instance) {
+            self::$instance = new static(
                 $appNamespace,
                 $appName,
                 $appResDir,
@@ -148,7 +148,7 @@ class ContainerFactory
      */
     public static function getInstance()
     {
-        return static::$instance;
+        return self::$instance;
     }
 
     /**
