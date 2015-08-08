@@ -109,11 +109,11 @@ class ContainerFactory
     /**
      * create
      *
-     * @param             $appNamespace
-     * @param             $appName
-     * @param             $appResDir
-     * @param             $appConfigDir
-     * @param             $serviceConfig
+     * @param             string $appNamespace
+     * @param             string $appName
+     * @param             string $appResDir
+     * @param             string $appConfigDir
+     * @param             string $serviceConfig
      * @param Composer    $composer
      * @param IOInterface $io
      *
